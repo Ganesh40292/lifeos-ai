@@ -1,0 +1,383 @@
+@import "tailwindcss";
+
+/* ============================================
+   LifeOS Design System — CSS Custom Properties
+   ============================================ */
+
+@theme {
+  /* Colors */
+  --color-bg: #09090B;
+  --color-bg-card: #18181B;
+  --color-bg-elevated: #1f1f23;
+  --color-bg-hover: #27272A;
+  --color-bg-input: #18181B;
+
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-light: #3B82F6;
+  --color-primary-muted: rgba(37, 99, 235, 0.15);
+
+  --color-accent: #7C3AED;
+  --color-accent-hover: #6D28D9;
+  --color-accent-light: #8B5CF6;
+  --color-accent-muted: rgba(124, 58, 237, 0.15);
+
+  --color-text: #FAFAFA;
+  --color-text-secondary: #D4D4D8;
+  --color-text-muted: #A1A1AA;
+  --color-text-faint: #71717A;
+
+  --color-danger: #EF4444;
+  --color-danger-hover: #DC2626;
+  --color-danger-muted: rgba(239, 68, 68, 0.15);
+
+  --color-success: #22C55E;
+  --color-success-hover: #16A34A;
+  --color-success-muted: rgba(34, 197, 94, 0.15);
+
+  --color-warning: #F59E0B;
+  --color-warning-hover: #D97706;
+  --color-warning-muted: rgba(245, 158, 11, 0.15);
+
+  --color-info: #3B82F6;
+  --color-info-muted: rgba(59, 130, 246, 0.15);
+
+  --color-border: #27272A;
+  --color-border-light: #3F3F46;
+  --color-ring: rgba(37, 99, 235, 0.5);
+
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Spacing */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --topbar-height: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-in-left: slide-in-left 0.3s ease-out;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+@layer base {
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-light);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-faint);
+  }
+
+  /* Focus styles */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--color-primary-muted);
+    color: var(--color-text);
+  }
+}
+
+/* ============================================
+   Keyframes
+   ============================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+@utility page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: var(--animate-fade-in);
+}
+
+@utility page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+
+@utility page-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+@utility skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-card) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Light Theme Variables Overrides */
+:root.light-theme {
+  --color-bg: #F4F4F5;
+  --color-bg-card: #FFFFFF;
+  --color-bg-elevated: #FAFAFA;
+  --color-bg-hover: #E4E4E7;
+  --color-bg-input: #FAFAFA;
+  --color-text: #09090B;
+  --color-text-secondary: #27272A;
+  --color-text-muted: #71717A;
+  --color-text-faint: #A1A1AA;
+  --color-border: #E4E4E7;
+  --color-border-light: #D4D4D8;
+}
+
+/* ============================================
+   3D Isometric Loader Keyframe Animations
+   ============================================ */
+@keyframes float-isometric {
+  0%, 100% { transform: translateY(0px) rotateX(60deg) rotateZ(-45deg); }
+  50% { transform: translateY(-12px) rotateX(60deg) rotateZ(-45deg); }
+}
+
+@keyframes slide-layer-1 {
+  0% { transform: translate3d(-200px, 0, 150px); opacity: 0; }
+  30%, 100% { transform: translate3d(0, 0, 0); opacity: 1; }
+}
+
+@keyframes slide-layer-2 {
+  0%, 15% { transform: translate3d(0, -200px, 150px); opacity: 0; }
+  45%, 100% { transform: translate3d(0, 0, 40px); opacity: 1; }
+}
+
+@keyframes slide-layer-3 {
+  0%, 30% { transform: translate3d(200px, 0, 150px); opacity: 0; }
+  60%, 100% { transform: translate3d(0, 0, 80px); opacity: 1; }
+}
+
+@keyframes slide-layer-4 {
+  0%, 45% { transform: translate3d(0, 200px, 150px); opacity: 0; }
+  75%, 100% { transform: translate3d(0, 0, 120px); opacity: 1; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 10px var(--color-primary-light)) brightness(0.9); }
+  50% { filter: drop-shadow(0 0 20px var(--color-accent-light)) brightness(1.2); }
+}
+
+/* ============================================
+   Onboarding Tour (Joyride) Theme Adaptability
+   ============================================ */
+.react-joyride__tooltip {
+  background-color: var(--color-bg-card) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 20px !important;
+}
+
+.react-joyride__tooltip [data-testid="title"] {
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+}
+
+.react-joyride__tooltip [data-testid="content"] {
+  color: var(--color-text-secondary) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  margin-top: 8px !important;
+}
+
+.react-joyride__tooltip button {
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  transition: all var(--transition-fast) !important;
+  cursor: pointer !important;
+}
+
+/* Next / Primary button */
+.react-joyride__tooltip button[data-testid="button-next"] {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 16px !important;
+}
+
+.react-joyride__tooltip button[data-testid="button-next"]:hover {
+  background-color: var(--color-primary-hover) !important;
+}
+
+/* Back button */
+.react-joyride__tooltip button[data-testid="button-back"] {
+  color: var(--color-text-muted) !important;
+  margin-right: 12px !important;
+}
+
+.react-joyride__tooltip button[data-testid="button-back"]:hover {
+  color: var(--color-text) !important;
+}
+
+/* Skip button */
+.react-joyride__tooltip button[data-testid="button-skip"] {
+  color: var(--color-text-faint) !important;
+}
+
+.react-joyride__tooltip button[data-testid="button-skip"]:hover {
+  color: var(--color-text-muted) !important;
+}
+
+/* Arrow pointer */
+.react-joyride__arrow {
+  color: var(--color-bg-card) !important;
+}
+
+/* Ensure browser native input icons (like calendar, time) are visible in both themes */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+:root.light-theme input[type="date"],
+:root.light-theme input[type="time"],
+:root.light-theme input[type="datetime-local"] {
+  color-scheme: light;
+}
+
+select {
+  appearance: auto !important;
+}
+
+/* Premium Ambient Background Effects */
+.bg-grid-pattern {
+  background-size: 28px 28px;
+  background-image: radial-gradient(var(--color-border) 1.2px, transparent 1.2px);
+}
+
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -60px) scale(1.1); }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-50px, 40px) scale(0.95); }
+}
+
+@keyframes orb-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 30px) scale(1.05); }
+}
+
+.animate-orb-1 {
+  animation: orb-float-1 25s infinite ease-in-out alternate;
+}
+
+.animate-orb-2 {
+  animation: orb-float-2 20s infinite ease-in-out alternate;
+}
+
+.animate-orb-3 {
+  animation: orb-float-3 28s infinite ease-in-out alternate;
+}
