@@ -101,3 +101,76 @@ This repository is optimized for quick hosting configurations:
 | **Database** | Railway | Create a MySQL instance. Host variables (`MYSQLHOST`, `MYSQLPORT`, etc.) are read automatically. |
 | **Backend API** | Render | Map `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` variables. Set `FRONTEND_URL` to Vercel domain. |
 | **Frontend** | Vercel | Set `VITE_API_URL` and `VITE_API_BASE_URL` to point to the Render backend service url. |
+
+---
+
+## 🔑 Environment Variables Reference
+
+### Backend (`backend/lifeos-api`)
+| Variable | Description | Example / Default |
+| :--- | :--- | :--- |
+| `SPRING_DATASOURCE_URL` | JDBC database connection endpoint | `jdbc:mysql://host:port/db?useSSL=false` |
+| `SPRING_DATASOURCE_USERNAME` | MySQL database username | `root` |
+| `SPRING_DATASOURCE_PASSWORD` | MySQL database password | `yourpassword` |
+| `SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT` | Hibernate SQL translation engine | `org.hibernate.dialect.MySQLDialect` |
+| `FRONTEND_URL` | CORS authorized frontend address | `https://lifeos.vercel.app` |
+| `JWT_SECRET` | Secret key for signing login JWTs | `at-least-256-bit-long-secret-key-phrase` |
+| `JWT_EXPIRATION_MS` | Token validity duration | `86400000` (24 Hours) |
+
+### Frontend (`frontend`)
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `VITE_API_BASE_URL` | API target for client HTTP fetches | `https://lifeos-api.onrender.com/api` |
+| `VITE_API_URL` | Base host target for WebSockets | `https://lifeos-api.onrender.com` |
+
+---
+
+## 📡 Core API Endpoints
+
+### 🔐 Authentication
+* `POST /api/auth/register` — Create a new account.
+* `POST /api/auth/login` — Sign in and retrieve JWT.
+* `POST /api/auth/verify-2fa` — Verify two-factor authentication TOTP code.
+
+### 🎮 Gamification & User Profiles
+* `POST /api/users/xp` — Reward XP for specific activities (e.g. `STUDY_QUIZ`).
+* `GET /api/notifications` — Retrieve level achievements and WebSocket alerts history.
+* `POST /api/notifications/mark-all-read` — Reset unread notification counts.
+
+### 📚 Study & notes
+* `GET /api/notes` — Retrieve user note lists and study materials folders.
+* `POST /api/notes` — Save notes and folders created via SiriOS or split-screen companion.
+* `GET /api/student/subjects` — Get list of course modules, class attendance, and grade points.
+* `POST /api/student/assignments` — Add assignments or due project dates.
+
+### 💰 Transactions & Ledger
+* `GET /api/finance/summary` — Get ledger statistics, budgets limits, and savings goals totals.
+* `POST /api/finance/transactions` — Log income/expense entries (DB auto-scales local input currencies to USD).
+
+---
+
+## ⌨️ Keyboard Shortcuts & Shortcuts Menu
+
+Maximize navigation speeds using global hotkeys:
+
+* `Ctrl + K` — Toggle search **Command Palette** popup overlay.
+* `?` — View keyboard shortcut cheatsheet.
+* `v` — Activate **SiriOS Voice Assistant** speech-recognition.
+* `g` then `d` — Navigate to **Dashboard**.
+* `g` then `n` — Navigate to **Notes Page**.
+* `g` then `f` — Navigate to **Finance Manager**.
+* `g` then `s` — Navigate to **Academics / Student** dashboard.
+* `g` then `h` — Navigate to **Health Manager**.
+* `g` then `p` — Navigate to **Focus Pomodoro Room**.
+* `g` then `e` — Navigate to **Settings Page**.
+
+---
+
+## 🎙️ SiriOS Natural Language Voice Commands
+
+Once voice mode is active (click microphone or press `V`), speak natural sentences:
+
+* **Log Transaction**: *"spent 150 on food"* or *"log expense 500 for books"* or *"paid 1200 for rent"*
+* **Save Notes**: *"note down project ideas"* or *"create note shopping list"*
+* **Academic Tasks**: *"study database tomorrow"* or *"add assignment calculus"*
+* **Quick Navigation**: *"go to focus"*, *"navigate to finance"*, *"open settings"*, *"show dashboard"*, *"open skill tree"*
