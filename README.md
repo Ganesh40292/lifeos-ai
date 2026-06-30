@@ -2,8 +2,6 @@
 
 An all-in-one, highly interactive personal productivity suite that transforms daily habits, academic tasks, study notes, and financial budgeting into a gamified RPG experience.
 
-🔗 **Live Link**: [https://lifeos-ai-one.vercel.app/](https://lifeos-ai-one.vercel.app/)
-
 [![Vite](https://img.shields.io/badge/Vite-8.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io)
@@ -12,6 +10,8 @@ An all-in-one, highly interactive personal productivity suite that transforms da
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-F107A3?style=for-the-badge&logo=framer&logoColor=white)](https://framer.com/motion)
 
 ---
+
+🔗 **Live Link**: [https://lifeos-ai-one.vercel.app/](https://lifeos-ai-one.vercel.app/)
 
 ## 🌟 Key Features
 
