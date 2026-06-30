@@ -8,6 +8,7 @@ An all-in-one, highly interactive personal productivity suite that transforms da
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://oracle.com/java)
 [![MySQL](https://img.shields.io/badge/MySQL-9.6-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-F107A3?style=for-the-badge&logo=framer&logoColor=white)](https://framer.com/motion)
+[![Live Site](https://img.shields.io/badge/Live_Site-Visit_Here-00C9A7?style=for-the-badge&logo=vercel&logoColor=white)](https://lifeos-ai-one.vercel.app/)
 
 ---
 
