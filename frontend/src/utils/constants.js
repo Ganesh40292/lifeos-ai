@@ -1,8 +1,8 @@
 /** Aetheria application constants. */
 export const APP_NAME = 'Aetheria';
 
-/** API base URL — dynamic for production deployments */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+/** API base URL — dynamic for production deployments (supports VITE_API_URL & VITE_API_BASE_URL) */
+export const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 
 /** LocalStorage keys */
 export const STORAGE_KEYS = {
