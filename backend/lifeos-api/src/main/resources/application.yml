@@ -1,5 +1,5 @@
 # ============================================
-# LifeOS API — Application Configuration
+# Aetheria API — Application Configuration (PostgreSQL / Supabase Ready)
 # ============================================
 
 spring:
@@ -10,27 +10,29 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
-  # ---- Database ----
+  # ---- Database (PostgreSQL / Supabase) ----
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:lifeos_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
-    username: ${SPRING_DATASOURCE_USERNAME:${MYSQLUSER:root}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${MYSQLPASSWORD:Ganesh}}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:postgres}?sslmode=prefer}
+    username: ${SPRING_DATASOURCE_USERNAME:${POSTGRES_USER:postgres}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${POSTGRES_PASSWORD:postgres}}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
     hikari:
       maximum-pool-size: 10
-      minimum-idle: 5
+      minimum-idle: 2
       idle-timeout: 30000
       connection-timeout: 20000
+      keepalive-time: 30000
 
   # ---- JPA / Hibernate ----
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         format_sql: true
-        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.MySQLDialect}
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
         type:
           preferred_uuid_jdbc_type: VARCHAR
     open-in-view: false

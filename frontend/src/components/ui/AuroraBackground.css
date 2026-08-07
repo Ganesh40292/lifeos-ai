@@ -1,0 +1,28 @@
+/* AuroraBackground Ambient Container */
+.aurora-bg-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #020617;
+}
+
+.aurora-bg-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+/* Translucent Dark Overlay for text/chart contrast */
+.aurora-dark-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(3, 7, 18, 0.60);
+  pointer-events: none;
+  z-index: 1;
+}

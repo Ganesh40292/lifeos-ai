@@ -1,0 +1,5 @@
+# Aetheria robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://aetheria.vercel.app/sitemap.xml

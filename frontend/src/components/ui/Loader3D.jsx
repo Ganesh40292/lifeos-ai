@@ -6,7 +6,7 @@ import {
 import clsx from 'clsx';
 
 /**
- * LifeOS Neural Core Initialization - Premium Cinematic Entry Loader
+ * Aetheria Neural Engine Initialization — Premium Cinematic Entry Loader
  * Sequences 5 cinematic phases mapping core system booting.
  */
 const Loader3D = ({ show, onBootComplete }) => {

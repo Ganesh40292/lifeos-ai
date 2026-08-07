@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import ProtectedRoute from './ProtectedRoute';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import SkeletonCard from '@/components/ui/SkeletonLoader';
 
 // Lazy-loaded pages for code splitting
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -14,20 +15,27 @@ const NotesPage = lazy(() => import('@/pages/notes/NotesPage'));
 const HealthPage = lazy(() => import('@/pages/health/HealthPage'));
 const SettingsPage = lazy(() => import('@/pages/settings/SettingsPage'));
 const FocusPage = lazy(() => import('@/pages/focus/FocusPage'));
-const SkillsPage = lazy(() => import('@/pages/skills/SkillsPage'));
 
-/** Suspense fallback shown while lazy-loaded pages are being fetched */
+
+const HelpPage = lazy(() => import('@/pages/help/HelpPage'));
+
+/** Suspense skeleton fallback while lazy-loaded route chunk is fetched */
 const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[60vh]">
-    <Loader2 className="w-6 h-6 text-primary animate-spin" />
+  <div className="page-container space-y-6">
+    <div className="h-8 w-64 bg-bg-card rounded-lg skeleton-shimmer" />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <SkeletonCard count={3} />
+    </div>
   </div>
 );
 
-/** Wrap a page component with Suspense */
+/** Wrap a page component with ErrorBoundary and Suspense */
 const withSuspense = (Component) => (
-  <Suspense fallback={<PageLoader />}>
-    <Component />
-  </Suspense>
+  <ErrorBoundary>
+    <Suspense fallback={<PageLoader />}>
+      <Component />
+    </Suspense>
+  </ErrorBoundary>
 );
 
 /**
@@ -63,7 +71,8 @@ const router = createBrowserRouter([
       { path: 'health', element: withSuspense(HealthPage) },
       { path: 'settings', element: withSuspense(SettingsPage) },
       { path: 'focus', element: withSuspense(FocusPage) },
-      { path: 'skills', element: withSuspense(SkillsPage) },
+      { path: 'help', element: withSuspense(HelpPage) },
+
     ],
   },
 

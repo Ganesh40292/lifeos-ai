@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeProvider';
+import { LanguageProvider } from '@/context/LanguageContext';
 import router from '@/routes/AppRoutes';
 import Loader3D from '@/components/ui/Loader3D';
 
@@ -29,19 +30,21 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <Loader3D show={showLoader} onBootComplete={handleBootComplete} />
-        
-        {/* Cinematic Clip Path Reveal Wrapper */}
-        <motion.div
-          initial={{ clipPath: 'circle(0% at 50% 50%)' }}
-          animate={isBooted ? { clipPath: 'circle(150% at 50% 50%)' } : {}}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="w-full min-h-screen bg-[#09090B]"
-        >
-          <RouterProvider router={router} />
-        </motion.div>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <Loader3D show={showLoader} onBootComplete={handleBootComplete} />
+          
+          {/* Cinematic Clip Path Reveal Wrapper */}
+          <motion.div
+            initial={{ clipPath: 'circle(0% at 50% 50%)' }}
+            animate={isBooted ? { clipPath: 'circle(150% at 50% 50%)' } : {}}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+            className="w-full min-h-screen bg-[#09090B]"
+          >
+            <RouterProvider router={router} />
+          </motion.div>
+        </AuthProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };

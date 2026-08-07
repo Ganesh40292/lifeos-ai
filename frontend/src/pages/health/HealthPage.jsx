@@ -9,6 +9,8 @@ import WorkoutLog from './WorkoutLog';
 import HealthCharts from './HealthCharts';
 import HealthInsightsPanel from '@/components/health/HealthInsightsPanel';
 
+import SkeletonCard from '@/components/ui/SkeletonLoader';
+
 const HealthPage = () => {
   const { refreshUser } = useAuth();
   const [workouts, setWorkouts] = useState([]);
@@ -52,15 +54,17 @@ const HealthPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <div className="page-container space-y-6">
+        <div className="h-8 w-64 bg-bg-card rounded-md skeleton-shimmer" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SkeletonCard count={3} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0a] text-gray-100 p-4 sm:p-6 lg:p-8 overflow-y-auto custom-scrollbar">
-      <div id="health-page-content" className="max-w-6xl w-full mx-auto space-y-6">
+    <div id="health-page-content" className="page-container space-y-6">
         
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -108,7 +112,6 @@ const HealthPage = () => {
           <div className="lg:col-span-1 space-y-6">
             <HealthInsightsPanel />
             <WorkoutLog workouts={workouts} onRefresh={fetchData} />
-          </div>
         </div>
 
       </div>

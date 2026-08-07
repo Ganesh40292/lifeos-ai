@@ -1,6 +1,6 @@
-# 🌌 LifeOS — The Gamified Operating System for Your Life
+# 🌌 Aetheria — Modern Productivity Workspace
 
-An all-in-one, highly interactive personal productivity suite that transforms daily habits, academic tasks, study notes, and financial budgeting into a gamified RPG experience.
+An all-in-one, highly interactive personal productivity suite that transforms daily habits, academic tasks, study notes, health metrics, and financial budgeting into a gamified RPG experience.
 
 🔗 **Live Link**: [https://lifeos-ai-one.vercel.app/](https://lifeos-ai-one.vercel.app/)
 

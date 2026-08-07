@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -122,4 +122,4 @@ const HealthCharts = ({ metrics }) => {
   );
 };
 
-export default HealthCharts;
+export default React.memo(HealthCharts);

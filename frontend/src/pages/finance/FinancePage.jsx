@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wallet,
@@ -112,13 +112,13 @@ const FinancePage = () => {
   
   // Currency state
   const [activeCurrency, setActiveCurrency] = useState(() => {
-    return localStorage.getItem('lifeos_currency') || 'USD';
+    return localStorage.getItem('aetheria_currency') || 'USD';
   });
 
   const handleCurrencyChange = (e) => {
     const val = e.target.value;
     setActiveCurrency(val);
-    localStorage.setItem('lifeos_currency', val);
+    localStorage.setItem('aetheria_currency', val);
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -366,16 +366,16 @@ const FinancePage = () => {
   };
 
   // Prepare Recharts Data
-  const getPieChartData = () => {
+  const pieChartData = useMemo(() => {
     if (!summary || !summary.categoryExpenses) return [];
     const activeRate = CURRENCIES[activeCurrency]?.rate || 1.0;
     return Object.entries(summary.categoryExpenses).map(([name, value]) => ({
       name,
       value: parseFloat(value) * activeRate,
     }));
-  };
+  }, [summary, activeCurrency]);
 
-  const getBarChartData = () => {
+  const barChartData = useMemo(() => {
     if (!summary || !summary.budgets) return [];
     const activeRate = CURRENCIES[activeCurrency]?.rate || 1.0;
     return summary.budgets.map((b) => ({
@@ -383,10 +383,7 @@ const FinancePage = () => {
       Limit: parseFloat(b.limitAmount) * activeRate,
       Spent: parseFloat(b.spentAmount) * activeRate,
     }));
-  };
-
-  const pieChartData = getPieChartData();
-  const barChartData = getBarChartData();
+  }, [summary, activeCurrency]);
 
   if (loading && !summary) {
     return (

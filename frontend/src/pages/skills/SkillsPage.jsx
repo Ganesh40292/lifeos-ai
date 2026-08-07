@@ -126,7 +126,7 @@ const SkillsPage = () => {
   
   // Load unlocked nodes from localStorage
   const [unlockedSkills, setUnlockedSkills] = useState(() => {
-    const saved = localStorage.getItem('lifeos_unlocked_skills');
+    const saved = localStorage.getItem('aetheria_unlocked_skills');
     return saved ? JSON.parse(saved) : ['study_initiate', 'focus_core']; // Start with starter nodes unlocked
   });
 
@@ -163,7 +163,7 @@ const SkillsPage = () => {
     
     const updated = [...unlockedSkills, node.id];
     setUnlockedSkills(updated);
-    localStorage.setItem('lifeos_unlocked_skills', JSON.stringify(updated));
+    localStorage.setItem('aetheria_unlocked_skills', JSON.stringify(updated));
     setSelectedNode(node);
   };
 

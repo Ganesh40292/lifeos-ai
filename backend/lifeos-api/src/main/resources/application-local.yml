@@ -1,18 +1,27 @@
+# ============================================
+# Local Profile — Fast In-Memory H2 (PostgreSQL Compatibility Mode)
+# Allows running the application locally without requiring a live internet/database connection.
+# ============================================
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/lifeos_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: Ganesh
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:lifeos_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_LOWER=TRUE}
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+    show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        type:
-          preferred_uuid_jdbc_type: VARCHAR
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
   docker:
     compose:
       enabled: false

@@ -1,16 +1,15 @@
-/**
- * LifeOS application constants.
- */
+/** Aetheria application constants. */
+export const APP_NAME = 'Aetheria';
 
 /** API base URL — dynamic for production deployments */
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /** LocalStorage keys */
 export const STORAGE_KEYS = {
-  TOKEN: 'lifeos_token',
-  USER: 'lifeos_user',
-  SIDEBAR_COLLAPSED: 'lifeos_sidebar_collapsed',
-  THEME: 'lifeos_theme',
+  TOKEN: 'aetheria_token',
+  USER: 'aetheria_user',
+  SIDEBAR_COLLAPSED: 'aetheria_sidebar_collapsed',
+  THEME: 'aetheria_theme',
 };
 
 /** Navigation items for the sidebar */
@@ -45,10 +44,11 @@ export const NAV_ITEMS = [
     path: '/health',
     icon: 'HeartPulse',
   },
+
   {
-    label: 'Skill Tree',
-    path: '/skills',
-    icon: 'Network',
+    label: 'Help & Support',
+    path: '/help',
+    icon: 'LifeBuoy',
   },
   {
     label: 'Settings',

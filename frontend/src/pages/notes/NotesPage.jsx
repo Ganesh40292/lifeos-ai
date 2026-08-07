@@ -836,7 +836,7 @@ const NotesPage = () => {
             </div>
           ) : (
             <EmptyState
-              icon={<StickyNote className="w-12 h-12" />}
+              icon={StickyNote}
               title="No note selected"
               description="Choose a note from the ledger sidebar, or click New Note to start writing documents."
             />

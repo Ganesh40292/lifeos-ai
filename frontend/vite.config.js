@@ -12,11 +12,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'LifeOS — The Operating System for Your Life',
-        short_name: 'LifeOS',
-        description: 'Your all-in-one personal productivity operating system',
-        theme_color: '#6366f1',
-        background_color: '#0f1117',
+        name: 'Aetheria — Gamified SaaS Productivity Suite',
+        short_name: 'Aetheria',
+        description: 'Your all-in-one gamified SaaS productivity suite',
+        theme_color: '#2563eb',
+        background_color: '#09090b',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
@@ -79,6 +79,35 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       }
+    },
+  },
+  build: {
+    target: 'esnext',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('recharts')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
+            if (id.includes('three')) {
+              return 'vendor-three';
+            }
+            return 'vendor-libs';
+          }
+        },
+      },
     },
   },
 });

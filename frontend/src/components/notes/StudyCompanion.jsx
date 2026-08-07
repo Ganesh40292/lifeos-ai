@@ -134,7 +134,7 @@ const getStudyMaterial = (title = '', content = '') => {
         answer: 0
       },
       {
-        q: 'How does earning experience points (XP) help in LifeOS?',
+        q: 'How does earning experience points (XP) help in Aetheria?',
         options: ['Unlocks physical gifts', 'Increases character level, representing personal growth progress', 'Resets transaction limits', 'Deletes completed notes'],
         answer: 1
       },

@@ -19,6 +19,8 @@ import LifeScoreGauge from '@/components/dashboard/LifeScoreGauge';
 import LifeReportModal from '@/components/dashboard/LifeReportModal';
 import HabitTrackerWidget from '@/components/dashboard/HabitTrackerWidget';
 
+import SkeletonCard from '@/components/ui/SkeletonLoader';
+
 // Animation variants for staggered card entrance
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,8 +31,8 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } },
 };
 
 const DEFAULT_LAYOUT = {
@@ -68,7 +70,7 @@ const DashboardPage = () => {
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [layout, setLayout] = useState(() => {
-    const saved = localStorage.getItem('lifeos_dashboard_layout');
+    const saved = localStorage.getItem('aetheria_dashboard_layout');
     return saved ? JSON.parse(saved) : DEFAULT_LAYOUT;
   });
 
@@ -89,12 +91,12 @@ const DashboardPage = () => {
   const handleToggleWidget = (key) => {
     const updated = { ...layout, [key]: !layout[key] };
     setLayout(updated);
-    localStorage.setItem('lifeos_dashboard_layout', JSON.stringify(updated));
+    localStorage.setItem('aetheria_dashboard_layout', JSON.stringify(updated));
   };
 
   const handleResetLayout = () => {
     setLayout(DEFAULT_LAYOUT);
-    localStorage.setItem('lifeos_dashboard_layout', JSON.stringify(DEFAULT_LAYOUT));
+    localStorage.setItem('aetheria_dashboard_layout', JSON.stringify(DEFAULT_LAYOUT));
   };
 
   const today = formatDate(new Date(), {
@@ -106,8 +108,11 @@ const DashboardPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[60vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <div className="page-container space-y-6">
+        <div className="h-8 w-64 bg-bg-card rounded-md skeleton-shimmer" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <SkeletonCard count={4} />
+        </div>
       </div>
     );
   }
@@ -121,6 +126,14 @@ const DashboardPage = () => {
       initial="hidden"
       animate="visible"
     >
+      {/* Dedicated Custom Background Photo for Dashboard */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700"
+          style={{ backgroundImage: `url('/dashboard-bg.jpg')` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/70 via-[#020617]/60 to-[#020617]/80 backdrop-blur-[2px]" />
+      </div>
       {/* Layout Customizer Panel */}
       <AnimatePresence>
         {showLayoutEditor && (

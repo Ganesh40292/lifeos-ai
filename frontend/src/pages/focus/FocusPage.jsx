@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Play, Pause, RotateCcw, Volume2, VolumeX, Sparkles, Trophy, 
-  Hourglass, Flame, Brain, Calendar, Info
+  Hourglass, Flame, Brain, Calendar, Info, Maximize, Minimize
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -25,6 +25,10 @@ const FocusPage = () => {
   const [timerRunning, setTimerRunning] = useState(false);
   const [sessionHistory, setSessionHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
+
+  // Fullscreen immersive mode
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const focusContainerRef = useRef(null);
 
   // Ambient sound synthesizer states
   const [ambientSound, setAmbientSound] = useState('NONE'); // 'NONE' | 'RAIN' | 'OCEAN' | 'DRONE'
@@ -89,6 +93,39 @@ const FocusPage = () => {
       gainNodeRef.current.gain.setValueAtTime(audioVolume, audioCtxRef.current.currentTime);
     }
   }, [audioVolume]);
+
+  // Fullscreen API helpers
+  const enterFullscreen = useCallback(() => {
+    const el = focusContainerRef.current || document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => {});
+    } else if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    }
+  }, []);
+
+  const exitFullscreen = useCallback(() => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }, []);
+
+  // Track fullscreen state changes (user may press Esc)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement || !!document.webkitFullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   const startAmbientAudio = () => {
     try {
@@ -267,7 +304,76 @@ const FocusPage = () => {
   const currentMinutesPercentage = timeLeft / (SESSION_TYPES[sessionType].minutes * 60);
 
   return (
-    <div className="page-container relative max-w-5xl mx-auto">
+    <div ref={focusContainerRef} className="page-container relative max-w-5xl mx-auto bg-bg">
+      {/* Fullscreen Immersive Overlay */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[9999] bg-[#020617] flex flex-col items-center justify-center select-none"
+          >
+            {/* Subtle ambient glow */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/8 blur-[180px]" />
+            </div>
+
+            {/* Session type badge */}
+            <span className={`text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border mb-8 ${SESSION_TYPES[sessionType].badge} ${SESSION_TYPES[sessionType].color}`}>
+              {SESSION_TYPES[sessionType].label}
+            </span>
+
+            {/* Large Timer */}
+            <div className="text-8xl md:text-9xl font-mono font-bold tracking-widest text-text mb-4">
+              {formatTime(timeLeft)}
+            </div>
+
+            {/* XP hint */}
+            <span className="text-sm text-text-faint flex items-center gap-2 mb-12">
+              <Sparkles className="w-4 h-4 text-primary" />
+              {sessionType === 'FOCUS' ? 'Earn +50 XP upon completion' : 'Enjoy your break!'}
+            </span>
+
+            {/* Fullscreen Controls */}
+            <div className="flex items-center gap-6">
+              {/* Pause / Resume */}
+              <button
+                onClick={() => setTimerRunning(!timerRunning)}
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                  timerRunning
+                    ? 'bg-gray-800 text-text hover:bg-gray-700 shadow-md'
+                    : 'bg-primary text-white hover:bg-primary-light hover:scale-105 shadow-lg shadow-primary/20'
+                }`}
+              >
+                {timerRunning ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 fill-white ml-0.5" />}
+              </button>
+
+              {/* Reset */}
+              <button
+                onClick={() => {
+                  setTimerRunning(false);
+                  setTimeLeft(SESSION_TYPES[sessionType].minutes * 60);
+                }}
+                className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:text-text text-text-muted transition-colors cursor-pointer"
+                title="Reset timer"
+              >
+                <RotateCcw className="w-5 h-5" />
+              </button>
+
+              {/* Exit Fullscreen */}
+              <button
+                onClick={exitFullscreen}
+                className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:text-text text-text-muted transition-colors cursor-pointer"
+                title="Exit fullscreen"
+              >
+                <Minimize className="w-5 h-5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Top Banner section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
@@ -338,7 +444,11 @@ const FocusPage = () => {
             {/* Start/Stop Controls */}
             <div className="flex items-center gap-4 z-10">
               <button
-                onClick={() => setTimerRunning(!timerRunning)}
+                onClick={() => {
+                  const next = !timerRunning;
+                  setTimerRunning(next);
+                  if (next) enterFullscreen();
+                }}
                 className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                   timerRunning
                     ? 'bg-gray-800 text-text hover:bg-gray-700 shadow-md'

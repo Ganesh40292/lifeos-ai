@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
-import BottomNav from './BottomNav';
-import CommandPalette from '@/components/ui/CommandPalette';
-import ShortcutHelp from '@/components/ui/ShortcutHelp';
-import OnboardingTour from '@/components/ui/OnboardingTour';
+import MobileBottomNav from './MobileBottomNav';
 import { STORAGE_KEYS } from '@/utils/constants';
-import ThreeDBackground from '@/components/ui/ThreeDBackground';
+
+// Lazy-loaded non-critical modal overlays & background mesh
+const CommandPalette = lazy(() => import('@/components/ui/CommandPalette'));
+const ShortcutHelp = lazy(() => import('@/components/ui/ShortcutHelp'));
+const OnboardingTour = lazy(() => import('@/components/ui/OnboardingTour'));
+const AuroraBackground = lazy(() => import('@/components/ui/AuroraBackground'));
+const AiCopilot = lazy(() => import('@/components/ui/AiCopilot'));
+const PwaBanner = lazy(() => import('@/components/ui/PwaBanner'));
 
 /**
  * Main application layout combining Sidebar + Topbar + content area.
- * The content area shifts responsively based on viewport and sidebar state.
  */
 const MainLayout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -20,6 +23,9 @@ const MainLayout = () => {
   });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
+  const [copilotOpen, setCopilotOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Sync collapsed state to localStorage
   const handleToggleCollapsed = (val) => {
@@ -37,9 +43,6 @@ const MainLayout = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
-  const navigate = useNavigate();
 
   // Global keyboard shortcut engine
   useEffect(() => {
@@ -60,6 +63,13 @@ const MainLayout = () => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setCommandPaletteOpen((prev) => !prev);
+        return;
+      }
+
+      // Allow Ctrl+Shift+A to toggle AI Copilot
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        setCopilotOpen((prev) => !prev);
         return;
       }
 
@@ -86,7 +96,7 @@ const MainLayout = () => {
           gn: '/notes',
           gf: '/finance',
           gs: '/student',
-          gh: '/health',
+          gh: '/help',
           ge: '/settings',
           gp: '/focus',
         };
@@ -128,17 +138,18 @@ const MainLayout = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-bg text-text flex relative overflow-hidden">
-      {/* Dynamic Ambient Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {/* Live Interactive 3D Mesh Wave */}
-        <ThreeDBackground />
-        
-        {/* Soft Glowing Drifting Orbs */}
-        <div className="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] rounded-full bg-gradient-to-br from-primary/8 to-transparent blur-[130px] animate-orb-1 opacity-70" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full bg-gradient-to-br from-accent/6 to-transparent blur-[125px] animate-orb-2 opacity-80" />
-        <div className="absolute top-[25%] left-[20%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] rounded-full bg-gradient-to-br from-primary-light/4 to-transparent blur-[110px] animate-orb-3 opacity-60" />
-      </div>
+    <div className="min-h-screen bg-[#020617] text-text flex relative overflow-hidden">
+      {/* Ambient Enterprise SaaS Aurora Background */}
+      <Suspense fallback={null}>
+        <AuroraBackground
+          gradientColors={[
+            "rgba(99,102,241,0.18)",
+            "rgba(139,92,246,0.14)"
+          ]}
+          pulseDuration={18}
+          starCount={25}
+        />
+      </Suspense>
 
       {/* Sidebar - handles collapsed state on desktop & drawer state on mobile */}
       <Sidebar
@@ -168,29 +179,55 @@ const MainLayout = () => {
           'ml-0'
         )}
       >
-        <Topbar toggleMobileOpen={() => setMobileOpen((prev) => !prev)} />
+        <Topbar
+          toggleMobileOpen={() => setMobileOpen((prev) => !prev)}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          onOpenCopilot={() => setCopilotOpen(true)}
+        />
         <main className="flex-1 overflow-x-hidden pb-16 lg:pb-0">
           <Outlet />
         </main>
       </div>
 
+      {/* Floating AI Copilot Trigger Button */}
+      <button
+        onClick={() => setCopilotOpen(true)}
+        className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary-light text-white flex items-center justify-center shadow-xl shadow-primary/30 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border border-white/20"
+        title="Open AI Copilot (Ctrl + Shift + A)"
+      >
+        <span className="text-xl">✨</span>
+      </button>
+
       {/* Mobile Bottom Navigation */}
-      <BottomNav />
+      <MobileBottomNav />
 
-      {/* Command Palette */}
-      <CommandPalette
-        isOpen={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-      />
+      {/* PWA & Offline Banner */}
+      <Suspense fallback={null}>
+        <PwaBanner />
+      </Suspense>
 
-      {/* Keyboard Shortcut Help */}
-      <ShortcutHelp
-        isOpen={shortcutHelpOpen}
-        onClose={() => setShortcutHelpOpen(false)}
-      />
-
-      {/* Interactive Onboarding Tour */}
-      <OnboardingTour />
+      {/* Lazy-loaded overlays */}
+      <Suspense fallback={null}>
+        {commandPaletteOpen && (
+          <CommandPalette
+            isOpen={commandPaletteOpen}
+            onClose={() => setCommandPaletteOpen(false)}
+          />
+        )}
+        {shortcutHelpOpen && (
+          <ShortcutHelp
+            isOpen={shortcutHelpOpen}
+            onClose={() => setShortcutHelpOpen(false)}
+          />
+        )}
+        {copilotOpen && (
+          <AiCopilot
+            isOpen={copilotOpen}
+            onClose={() => setCopilotOpen(false)}
+          />
+        )}
+        <OnboardingTour />
+      </Suspense>
     </div>
   );
 };

@@ -18,18 +18,21 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allowed origins — read from environment or default to local Vite dev server
+        // Allowed origins — read from environment or support Vercel preview/production domains
         String frontendUrl = System.getenv("FRONTEND_URL");
         if (frontendUrl != null && !frontendUrl.isEmpty()) {
-            configuration.setAllowedOrigins(List.of(
+            configuration.setAllowedOriginPatterns(List.of(
                     "http://localhost:5173",
                     "http://localhost:3000",
+                    "https://*.vercel.app",
                     frontendUrl
             ));
         } else {
-            configuration.setAllowedOrigins(List.of(
+            configuration.setAllowedOriginPatterns(List.of(
                     "http://localhost:5173",
-                    "http://localhost:3000"
+                    "http://localhost:3000",
+                    "https://*.vercel.app",
+                    "*"
             ));
         }
 
@@ -53,7 +56,7 @@ public class CorsConfig {
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }

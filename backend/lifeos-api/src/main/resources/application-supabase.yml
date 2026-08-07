@@ -1,0 +1,29 @@
+# ============================================
+# Supabase PostgreSQL Dedicated Profile
+# ============================================
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db.bujlhczsiucvmjvwswnw.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: "#Ganesh808823"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 30000
+      connection-timeout: 20000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        type:
+          preferred_uuid_jdbc_type: VARCHAR
+
+  docker:
+    compose:
+      enabled: false

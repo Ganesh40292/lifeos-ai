@@ -3,29 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, LayoutDashboard, GraduationCap, Wallet, Hourglass,
-  StickyNote, HeartPulse, Settings, Plus, ArrowRight,
-  Command, CornerDownLeft, Network
+  StickyNote, HeartPulse, Settings, Plus, CornerDownLeft, Network,
+  Palette, Shield, FileText, Activity, Sun, Moon, LifeBuoy
 } from 'lucide-react';
+import { APP_NAME } from '@/utils/constants';
+import { useTheme } from '@/context/ThemeProvider';
 
 const ALL_ACTIONS = [
   // Navigation
-  { id: 'nav-dashboard', label: 'Go to Dashboard', section: 'Navigation', icon: LayoutDashboard, action: 'navigate', path: '/' },
-  { id: 'nav-student', label: 'Go to Student', section: 'Navigation', icon: GraduationCap, action: 'navigate', path: '/student' },
-  { id: 'nav-finance', label: 'Go to Finance', section: 'Navigation', icon: Wallet, action: 'navigate', path: '/finance' },
-  { id: 'nav-notes', label: 'Go to Notes', section: 'Navigation', icon: StickyNote, action: 'navigate', path: '/notes' },
-  { id: 'nav-focus', label: 'Go to Focus Room', section: 'Navigation', icon: Hourglass, action: 'navigate', path: '/focus' },
-  { id: 'nav-health', label: 'Go to Health', section: 'Navigation', icon: HeartPulse, action: 'navigate', path: '/health' },
-  { id: 'nav-skills', label: 'Go to Skill Tree', section: 'Navigation', icon: Network, action: 'navigate', path: '/skills' },
-  { id: 'nav-settings', label: 'Go to Settings', section: 'Navigation', icon: Settings, action: 'navigate', path: '/settings' },
+  { id: 'nav-dashboard', label: 'Go to Dashboard', section: 'Navigation', icon: LayoutDashboard, path: '/' },
+  { id: 'nav-student', label: 'Go to Student Hub', section: 'Navigation', icon: GraduationCap, path: '/student' },
+  { id: 'nav-finance', label: 'Go to Finance Manager', section: 'Navigation', icon: Wallet, path: '/finance' },
+  { id: 'nav-notes', label: 'Go to Study Notes & AI', section: 'Navigation', icon: StickyNote, path: '/notes' },
+  { id: 'nav-focus', label: 'Go to 3D Focus Room', section: 'Navigation', icon: Hourglass, path: '/focus' },
+  { id: 'nav-health', label: 'Go to Health & Workout Tracker', section: 'Navigation', icon: HeartPulse, path: '/health' },
+  { id: 'nav-help', label: 'Go to Help & Support Center', section: 'Navigation', icon: LifeBuoy, path: '/help' },
+  { id: 'nav-settings', label: 'Go to Settings & Preferences', section: 'Navigation', icon: Settings, path: '/settings' },
   // Quick Actions
-  { id: 'act-add-expense', label: 'Add Expense', section: 'Quick Actions', icon: Plus, action: 'navigate', path: '/finance' },
-  { id: 'act-add-note', label: 'Create New Note', section: 'Quick Actions', icon: Plus, action: 'navigate', path: '/notes' },
-  { id: 'act-log-workout', label: 'Log Workout', section: 'Quick Actions', icon: Plus, action: 'navigate', path: '/health' },
-  { id: 'act-add-subject', label: 'Add Subject', section: 'Quick Actions', icon: Plus, action: 'navigate', path: '/student' },
-  // Settings
-  { id: 'set-profile', label: 'Edit Profile', section: 'Settings', icon: Settings, action: 'navigate', path: '/settings' },
-  { id: 'set-password', label: 'Change Password', section: 'Settings', icon: Settings, action: 'navigate', path: '/settings' },
-  { id: 'set-theme', label: 'Change Theme', section: 'Settings', icon: Settings, action: 'navigate', path: '/settings' },
+  { id: 'act-add-note', label: 'Create New Study Note', section: 'Quick Actions', icon: Plus, path: '/notes' },
+  { id: 'act-add-expense', label: 'Log Financial Transaction', section: 'Quick Actions', icon: Plus, path: '/finance' },
+  { id: 'act-start-focus', label: 'Start 25-Min Pomodoro Sprint', section: 'Quick Actions', icon: Hourglass, path: '/focus' },
+  { id: 'act-log-workout', label: 'Record Workout Entry', section: 'Quick Actions', icon: Activity, path: '/health' },
+  { id: 'act-add-assignment', label: 'Add Academic Assignment', section: 'Quick Actions', icon: FileText, path: '/student' },
+  // Themes & Customization
+  { id: 'theme-midnight', label: 'Switch to Midnight Theme', section: 'Theme Presets', icon: Palette, themeId: 'midnight' },
+  { id: 'theme-aurora', label: 'Switch to Aurora Theme', section: 'Theme Presets', icon: Palette, themeId: 'aurora' },
+  { id: 'theme-graphite', label: 'Switch to Graphite OLED Theme', section: 'Theme Presets', icon: Palette, themeId: 'graphite' },
+  { id: 'theme-ocean', label: 'Switch to Ocean Theme', section: 'Theme Presets', icon: Palette, themeId: 'ocean' },
+  { id: 'theme-forest', label: 'Switch to Forest Theme', section: 'Theme Presets', icon: Palette, themeId: 'forest' },
+  { id: 'theme-light', label: 'Switch to Light Theme', section: 'Theme Presets', icon: Sun, themeId: 'light' },
+  // Settings & Security
+  { id: 'set-sessions', label: 'Manage Active Device Sessions', section: 'Settings', icon: Shield, path: '/settings' },
+  { id: 'set-shortcuts', label: 'View Keyboard Shortcuts', section: 'Settings', icon: Settings, path: '/settings' },
 ];
 
 const CommandPalette = ({ isOpen, onClose }) => {
@@ -34,6 +43,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
   const inputRef = useRef(null);
   const listRef = useRef(null);
   const navigate = useNavigate();
+  const { setThemeId } = useTheme();
 
   const filtered = useMemo(() => {
     if (!query.trim()) return ALL_ACTIONS;
@@ -43,7 +53,6 @@ const CommandPalette = ({ isOpen, onClose }) => {
     );
   }, [query]);
 
-  // Group by section
   const grouped = useMemo(() => {
     const map = {};
     filtered.forEach((item) => {
@@ -53,7 +62,6 @@ const CommandPalette = ({ isOpen, onClose }) => {
     return map;
   }, [filtered]);
 
-  // Flat list for keyboard nav
   const flatList = useMemo(() => filtered, [filtered]);
 
   useEffect(() => {
@@ -68,7 +76,6 @@ const CommandPalette = ({ isOpen, onClose }) => {
     setSelectedIndex(0);
   }, [query]);
 
-  // Scroll selected item into view
   useEffect(() => {
     const el = listRef.current?.querySelector(`[data-index="${selectedIndex}"]`);
     el?.scrollIntoView({ block: 'nearest' });
@@ -76,7 +83,9 @@ const CommandPalette = ({ isOpen, onClose }) => {
 
   const executeAction = (item) => {
     onClose();
-    if (item.action === 'navigate') {
+    if (item.themeId) {
+      setThemeId(item.themeId);
+    } else if (item.path) {
       navigate(item.path);
     }
   };
@@ -102,53 +111,49 @@ const CommandPalette = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Palette */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            initial={{ opacity: 0, scale: 0.96, y: -16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
+            exit={{ opacity: 0, scale: 0.96, y: -16 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-[15%] left-1/2 -translate-x-1/2 z-[101] w-[95vw] max-w-[640px]"
+            className="fixed top-[15%] left-1/2 -translate-x-1/2 z-[101] w-[92vw] max-w-[620px]"
           >
-            <div className="bg-[#1a1a1f] border border-gray-700/60 rounded-2xl shadow-2xl overflow-hidden">
-              {/* Search Input */}
-              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-700/40">
-                <Search className="w-5 h-5 text-gray-500 flex-shrink-0" />
+            <div className="bg-bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+              <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border bg-bg-elevated/50">
+                <Search className="w-4 h-4 text-text-muted flex-shrink-0" />
                 <input
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type a command or search..."
-                  className="flex-1 bg-transparent text-white text-sm placeholder-gray-500 outline-none"
+                  placeholder={`Search ${APP_NAME} pages, commands, or themes...`}
+                  className="flex-1 bg-transparent text-text text-sm placeholder-text-faint outline-none"
                   autoComplete="off"
                   spellCheck="false"
                 />
-                <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-[10px] text-gray-500 bg-gray-800 border border-gray-700 rounded-md font-mono">
+                <kbd className="hidden sm:flex items-center px-2 py-0.5 text-[10px] text-text-faint bg-bg-card border border-border rounded font-mono">
                   ESC
                 </kbd>
               </div>
 
-              {/* Results */}
-              <div ref={listRef} className="max-h-[360px] overflow-y-auto py-2">
+              <div ref={listRef} className="max-h-[340px] overflow-y-auto py-2">
                 {flatList.length === 0 ? (
-                  <div className="px-5 py-8 text-center text-sm text-gray-500">
-                    No results found for "{query}"
+                  <div className="px-5 py-8 text-center text-xs text-text-muted">
+                    No matching results found for "{query}"
                   </div>
                 ) : (
                   Object.entries(grouped).map(([section, items]) => (
                     <div key={section}>
-                      <div className="px-5 pt-3 pb-1 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-text-faint uppercase tracking-wider">
                         {section}
                       </div>
                       {items.map((item) => {
@@ -162,14 +167,14 @@ const CommandPalette = ({ isOpen, onClose }) => {
                             data-index={idx}
                             onClick={() => executeAction(item)}
                             onMouseEnter={() => setSelectedIndex(idx)}
-                            className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-colors ${
-                              isSelected ? 'bg-blue-600/15 text-blue-400' : 'text-gray-300 hover:bg-gray-800/50'
+                            className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors cursor-pointer ${
+                              isSelected ? 'bg-primary-muted text-primary font-medium' : 'text-text-secondary hover:bg-bg-hover'
                             }`}
                           >
-                            <Icon className={`w-4 h-4 flex-shrink-0 ${isSelected ? 'text-blue-400' : 'text-gray-500'}`} />
-                            <span className="flex-1 text-sm truncate">{item.label}</span>
+                            <Icon className={`w-4 h-4 flex-shrink-0 ${isSelected ? 'text-primary' : 'text-text-muted'}`} />
+                            <span className="flex-1 text-xs truncate">{item.label}</span>
                             {isSelected && (
-                              <CornerDownLeft className="w-3.5 h-3.5 text-gray-500" />
+                              <CornerDownLeft className="w-3.5 h-3.5 text-primary opacity-80" />
                             )}
                           </button>
                         );
@@ -179,16 +184,12 @@ const CommandPalette = ({ isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* Footer */}
-              <div className="flex items-center justify-between px-5 py-2.5 border-t border-gray-700/40 text-[11px] text-gray-500">
+              <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-bg-elevated/40 text-[10px] text-text-faint">
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px] font-mono">↑↓</kbd> Navigate</span>
-                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px] font-mono">↵</kbd> Select</span>
-                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px] font-mono">Esc</kbd> Close</span>
+                  <span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg-card border border-border rounded font-mono">↑↓</kbd> Navigate</span>
+                  <span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg-card border border-border rounded font-mono">↵</kbd> Select</span>
                 </div>
-                <span className="flex items-center gap-1">
-                  <Command className="w-3 h-3" /> LifeOS
-                </span>
+                <span className="font-semibold text-primary">{APP_NAME} Palette</span>
               </div>
             </div>
           </motion.div>

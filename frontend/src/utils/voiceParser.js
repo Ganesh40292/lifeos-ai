@@ -176,10 +176,6 @@ export const parseVoiceCommand = (text) => {
         isNav = true;
         targetPath = '/';
         targetName = 'Dashboard';
-      } else if (remainder.includes('skill') || remainder.includes('tree')) {
-        isNav = true;
-        targetPath = '/skills';
-        targetName = 'Skill Tree';
       }
       if (isNav) break;
     }
