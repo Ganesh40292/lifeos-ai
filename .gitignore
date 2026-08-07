@@ -13,16 +13,24 @@
 .classpath
 .project
 
-# Local environment / builds
+# Local environment / builds / secrets
 **/dist/
 .env
 .env.local
 .env.*.local
+*.pem
+*.key
+*.p12
+*.jks
+*.secret
+secrets/
+application-supabase.yml
+application-local.yml
 
 # OS files
 Thumbs.db
 .DS_Store
 *.log
 
-# Uploads
+# Uploads & Media
 **/uploads/

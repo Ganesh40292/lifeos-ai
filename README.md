@@ -1,47 +1,54 @@
-# 🌌 Aetheria — Modern Productivity Workspace
+# 🌌 Aetheria — Premium SaaS Productivity Operating Suite
 
-An all-in-one, highly interactive personal productivity suite that transforms daily habits, academic tasks, study notes, health metrics, and financial budgeting into a gamified RPG experience.
+An all-in-one, highly interactive personal productivity suite built with **React 19 + Vite + Tailwind CSS** on the frontend and **Spring Boot 3.5 + PostgreSQL (Supabase)** on the backend.
 
-[![Vite](https://img.shields.io/badge/Vite-8.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io)
-[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://oracle.com/java)
-[![MySQL](https://img.shields.io/badge/MySQL-9.6-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-F107A3?style=for-the-badge&logo=framer&logoColor=white)](https://framer.com/motion)
+Aetheria combines academic task management, multi-currency financial budgeting, rich markdown study notes, 3D Pomodoro focus rooms, daily health metrics, an AI Copilot workspace assistant, and direct administrator support into a seamless enterprise SaaS experience.
 
 ---
 
-🔗 **Live Link**: [https://lifeos-ai-one.vercel.app/](https://lifeos-ai-one.vercel.app/)
+## 🌟 Key Features & Latest Upgrades
 
-## 🌟 Key Features
+### 🎨 1. Premium WebGL & Glassmorphism Aesthetics
+- **SoftAurora WebGL Background**: Procedural GLSL shader animation powering full-screen ambient lighting across authentication and workspace views.
+- **Border Beam Panel**: Twin comets orbiting a 2px conic gradient ring driven by delta-time spring physics (`BorderBeamPanel.jsx`).
+- **Google Single Sign-On (OAuth)**: 1-click **Continue with Google** single sign-on experience on both Login and Register pages.
 
-### 🎮 Gamification Core & RPG leveling
-- **Dynamic XP Progress Bar**: Earn experience points (XP) and level up for every task completed, focus block tracked, note saved, and expense logged.
-- **WebSocket Real-time Notifications**: Receive system messages and levels alerts instantly.
+### 🤖 2. Aetheria AI Workspace Copilot (`Ctrl + Shift + A` / `✨`)
+- **Smart Workspace Assistant** (`AiCopilot.jsx`):
+  - Summarizes study notes into key takeaway bullets.
+  - Automatically generates 3D flashcards for exam review.
+  - Audits monthly financial transactions and recommends savings strategies.
+  - Generates 2-hour time-blocked Pomodoro focus schedules.
 
-### 🔮 Interactive RPG Skill Tree (`/skills`)
-- **Spend SP to Unlock Perks**: Spend accumulated character levels (Skill Points) to unlock passive attribute gains (e.g. *Study Initiate*, *Frugal Scholar*).
-- **Web Audio Synthesizer**: Unlocking or inspecting nodes plays audio frequencies using the browser **Web Audio API** oscillator nodes.
+### 🛟 3. Help & Support Center (`/help`)
+- **Direct Admin Channel**: Quick contact link to `ganeshprasad40292.dev@gmail.com` with 1-click email copy.
+- **Interactive Support Ticket Form**: Dispatch bug reports, feature requests, or account inquiries straight to the administrator.
+- **Searchable FAQ Accordions**: Instant live-filtered knowledge base covering security, focus rooms, data exports, and shortcuts.
+- **Fixed Dark Concrete Texture**: Multi-layer slate base (`#020617`), 14% opacity SVG noise texture, and top-right indigo radial glow.
 
-### ⌛ Interactive 3D Focus Room (`/focus`)
-- **Procedural lo-fi Sound Generator**: Generate customized ambient noises (Rain, Ocean waves, Drone frequencies) completely client-side.
-- **Glassmorphism 3D Timer**: Track Pomodoro cycles inside an animated glass cylinder.
+### 🎵 4. Web Audio Micro-Interaction SFX Engine
+- **Zero-Dependency Sound Effects** (`soundService.js`): Synthesizes crisp audio feedback for UI clicks, toggle switches, reward chimes, and notifications using browser Web Audio API oscillator nodes.
+- **Topbar Sound Toggle**: Global Mute/Unmute audio toggle with persistent user preference (`🔊` / `🔇`).
 
-### 📚 Notes & AI PDF Study Companion (`/notes`)
-- **Split-Screen Reader Panel**: View notes/PDFs on the left and Summaries, Quizzes, or Flashcards on the right.
-- **CSS 3D Flashcards**: Flip cards dynamically to review vocabulary.
-- **Practice Quizzes**: Take generated understanding quizzes and submit scores to claim **+30 XP** in the database.
+### 📱 5. Native PWA Mobile/Desktop App & Offline Banner
+- **PWA Install Prompt** (`PwaBanner.jsx`): Invites users to install Aetheria as a native desktop or mobile home screen application.
+- **Offline Network Alert**: Displays a subtle status alert when internet connectivity drops.
 
-### 📊 Daily Focus Streak Heatmap (Dashboard)
-- **Active Streak Calculations**: Automatically walks backward to compute active consecutive days of logged activity.
-- **GitHub-Style Contribution Grid**: Dark mode grid indicating study activity density.
+### 🔔 6. Interactive Notification Center Drawer
+- **Slide-out Notification Drawer** (`NotificationCenter.jsx`): Displays real-time assignment deadline alerts (< 24h), budget category threshold warnings (> 80%), and daily workout reminders.
 
-### 🗣️ SiriOS Voice Commander
-- **Vocal Shortcuts**: Tap "V" to activate the microphone. Parse natural language statements such as *"spent 150 on food"* or navigate directly with *"go to focus"* or *"open settings"*.
+### 🌐 7. Multi-Language (i18n) Support
+- **Global Language Selector**: Toggle workspace languages seamlessly (**English 🇺🇸, Spanish 🇪🇸, Français 🇫🇷, Deutsch 🇩🇪, 日本語 🇯🇵, हिंदी 🇮🇳**).
 
-### 💵 Finance Multi-Currency Switcher (`/finance`)
-- **Dynamic Exchange Rates**: Toggle baseline display values dynamically (USD, EUR, GBP, INR, JPY, CAD, AUD).
-- **Inputs Auto-Conversion**: Modal form entries are read in local currencies and converted to base USD in the DB automatically.
+### ⚙️ 8. Elevated Next-Level Settings UI (`/settings`)
+- **Profile Hero Summary**: Displays user initials avatar, level status, account security verification badge, and email.
+- **Live Theme Selector**: 6 curated themes (*Midnight, Aurora, Graphite OLED, Ocean Depth, Emerald Forest, Light Modern*) with real UI color swatch pills.
+- **Global Hotkey Filters**: Searchable keyboard shortcuts matrix with category pills (`Navigation`, `Actions`, `Global`).
+- **Data & Storage Allocation Bar**: Visual breakdown meter for study notes, finance logs, health data, and 1-click JSON backup export.
+
+### 🐘 9. Cloud PostgreSQL & Supabase Integration
+- **PostgreSQL Native Support**: Complete database schema (`schema.sql`) configured with `UUID` primary keys, `TIMESTAMP WITHOUT TIME ZONE`, `DECIMAL(15,2)`, and cascading foreign keys.
+- **Supabase Cloud Ready**: Dedicated application profile (`application-supabase.yml`) optimized for Supabase transaction poolers and Render cloud hosting.
 
 ---
 
@@ -49,130 +56,53 @@ An all-in-one, highly interactive personal productivity suite that transforms da
 ```
 LifeOS/
 ├── backend/
-│   └── lifeos-api/         # Spring Boot backend application code
+│   └── lifeos-api/
+│       ├── Dockerfile                   # Multi-stage Docker build for Render/Koyeb
+│       ├── pom.xml                      # Spring Boot 3.5 dependencies & PostgreSQL driver
+│       └── src/main/resources/
+│           ├── application.yml          # Core production environment configuration
+│           ├── application-local.yml    # In-memory H2 PostgreSQL mode for local dev
+│           ├── application-supabase.yml # Live Supabase PostgreSQL profile
+│           └── schema.sql               # PostgreSQL schema definition script
 ├── frontend/
-│   ├── vercel.json         # Vercel client path rewrites configuration
-│   ├── vite.config.js      # Vite build + Workbox PWA caching rules
-│   └── src/                # React components, pages, context, and hooks
-└── schema-mysql.sql        # MySQL complete database setup script
+│   ├── vercel.json                      # Vercel client path rewrites configuration
+│   ├── vite.config.js                   # Vite build & PWA configuration
+│   └── src/                             # React 19 source code
+│       ├── components/                  # UI components, Copilot, NotificationCenter, PwaBanner
+│       ├── context/                     # ThemeContext, AuthContext, LanguageContext
+│       ├── pages/                       # Dashboard, Student, Finance, Notes, Focus, Health, Help, Settings
+│       └── services/                    # SoundService, API services
+└── README.md
 ```
 
 ---
 
 ## 💻 Local Quickstart
 
-### 1. Database Setup
-Ensure you have **MySQL** running locally, then execute the setup script:
+### 1. Run the Frontend Client
 ```bash
-mysql -u root -p < schema-mysql.sql
+cd frontend
+npm install
+npm run dev
 ```
+Access the application at `http://localhost:5173/`.
 
-### 2. Run the Backend API
-1. Navigate to the backend directory:
-   ```bash
-   cd backend/lifeos-api
-   ```
-2. Launch the Spring Boot application under the local profile:
-   ```bash
-   ./mvnw spring-boot:run "-Dspring-boot.run.profiles=local"
-   ```
-
-### 3. Run the Frontend Client
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install npm dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-4. Access the web app at [http://localhost:5173/](http://localhost:5173/).
+### 2. Run the Backend API (Local Profile)
+```bash
+cd backend/lifeos-api
+./mvnw spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+The local profile runs in-memory with PostgreSQL dialect compatibility.
 
 ---
 
-## ☁️ Cloud Deployment Configuration
+## ☁️ Production Deployment Architecture
 
-This repository is optimized for quick hosting configurations:
+- **Frontend**: Deployed on **Vercel** (`frontend/`)
+- **Backend API**: Deployed on **Render** (`backend/lifeos-api/` with `Dockerfile`)
+- **Database**: Hosted on **Supabase** (PostgreSQL)
 
-| Service | Host | Configuration Required |
-| :--- | :--- | :--- |
-| **Database** | Railway | Create a MySQL instance. Host variables (`MYSQLHOST`, `MYSQLPORT`, etc.) are read automatically. |
-| **Backend API** | Render | Map `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` variables. Set `FRONTEND_URL` to Vercel domain. |
-| **Frontend** | Vercel | Set `VITE_API_URL` and `VITE_API_BASE_URL` to point to the Render backend service url. |
-
----
-
-## 🔑 Environment Variables Reference
-
-### Backend (`backend/lifeos-api`)
-| Variable | Description | Example / Default |
-| :--- | :--- | :--- |
-| `SPRING_DATASOURCE_URL` | JDBC database connection endpoint | `jdbc:mysql://host:port/db?useSSL=false` |
-| `SPRING_DATASOURCE_USERNAME` | MySQL database username | `root` |
-| `SPRING_DATASOURCE_PASSWORD` | MySQL database password | `yourpassword` |
-| `SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT` | Hibernate SQL translation engine | `org.hibernate.dialect.MySQLDialect` |
-| `FRONTEND_URL` | CORS authorized frontend address | `https://lifeos.vercel.app` |
-| `JWT_SECRET` | Secret key for signing login JWTs | `at-least-256-bit-long-secret-key-phrase` |
-| `JWT_EXPIRATION_MS` | Token validity duration | `86400000` (24 Hours) |
-
-### Frontend (`frontend`)
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `VITE_API_BASE_URL` | API target for client HTTP fetches | `https://lifeos-api.onrender.com/api` |
-| `VITE_API_URL` | Base host target for WebSockets | `https://lifeos-api.onrender.com` |
-
----
-
-## 📡 Core API Endpoints
-
-### 🔐 Authentication
-* `POST /api/auth/register` — Create a new account.
-* `POST /api/auth/login` — Sign in and retrieve JWT.
-* `POST /api/auth/verify-2fa` — Verify two-factor authentication TOTP code.
-
-### 🎮 Gamification & User Profiles
-* `POST /api/users/xp` — Reward XP for specific activities (e.g. `STUDY_QUIZ`).
-* `GET /api/notifications` — Retrieve level achievements and WebSocket alerts history.
-* `POST /api/notifications/mark-all-read` — Reset unread notification counts.
-
-### 📚 Study & notes
-* `GET /api/notes` — Retrieve user note lists and study materials folders.
-* `POST /api/notes` — Save notes and folders created via SiriOS or split-screen companion.
-* `GET /api/student/subjects` — Get list of course modules, class attendance, and grade points.
-* `POST /api/student/assignments` — Add assignments or due project dates.
-
-### 💰 Transactions & Ledger
-* `GET /api/finance/summary` — Get ledger statistics, budgets limits, and savings goals totals.
-* `POST /api/finance/transactions` — Log income/expense entries (DB auto-scales local input currencies to USD).
-
----
-
-## ⌨️ Keyboard Shortcuts & Shortcuts Menu
-
-Maximize navigation speeds using global hotkeys:
-
-* `Ctrl + K` — Toggle search **Command Palette** popup overlay.
-* `?` — View keyboard shortcut cheatsheet.
-* `v` — Activate **SiriOS Voice Assistant** speech-recognition.
-* `g` then `d` — Navigate to **Dashboard**.
-* `g` then `n` — Navigate to **Notes Page**.
-* `g` then `f` — Navigate to **Finance Manager**.
-* `g` then `s` — Navigate to **Academics / Student** dashboard.
-* `g` then `h` — Navigate to **Health Manager**.
-* `g` then `p` — Navigate to **Focus Pomodoro Room**.
-* `g` then `e` — Navigate to **Settings Page**.
-
----
-
-## 🎙️ SiriOS Natural Language Voice Commands
-
-Once voice mode is active (click microphone or press `V`), speak natural sentences:
-
-* **Log Transaction**: *"spent 150 on food"* or *"log expense 500 for books"* or *"paid 1200 for rent"*
-* **Save Notes**: *"note down project ideas"* or *"create note shopping list"*
-* **Academic Tasks**: *"study database tomorrow"* or *"add assignment calculus"*
-* **Quick Navigation**: *"go to focus"*, *"navigate to finance"*, *"open settings"*, *"show dashboard"*, *"open skill tree"*
+### Launching Backend with Supabase
+```bash
+./mvnw spring-boot:run "-Dspring-boot.run.profiles=supabase"
+```
