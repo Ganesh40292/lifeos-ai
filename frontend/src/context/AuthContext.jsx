@@ -61,21 +61,34 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // 2. Fallback to verifying existing stored token
+      // 2. Fallback to verifying existing stored token or session
       if (!token) {
         setLoading(false);
         return;
       }
 
+      const savedUser = localStorage.getItem(STORAGE_KEYS.USER);
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.warn('Failed to parse saved user:', e);
+        }
+      }
+
       try {
         const data = await authService.getCurrentUser();
-        setUser(data.data || data);
-      } catch {
-        // Token invalid or expired
-        localStorage.removeItem(STORAGE_KEYS.TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.USER);
-        setToken(null);
-        setUser(null);
+        if (data && (data.data || data.email)) {
+          setUser(data.data || data);
+        }
+      } catch (err) {
+        // If backend API call fails but we have a valid saved session (e.g. Google Auth), retain local session
+        if (!savedUser) {
+          localStorage.removeItem(STORAGE_KEYS.TOKEN);
+          localStorage.removeItem(STORAGE_KEYS.USER);
+          setToken(null);
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
