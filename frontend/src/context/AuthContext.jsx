@@ -55,16 +55,16 @@ export const AuthProvider = ({ children }) => {
               if (backendAuth?.token) {
                 jwtToken = backendAuth.token;
                 userData = backendAuth.user || userData;
+
+                // Save session only with valid backend JWT
+                localStorage.setItem(STORAGE_KEYS.TOKEN, jwtToken);
+                localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+                setToken(jwtToken);
+                setUser(userData);
               }
             } catch (e) {
-              console.warn('Backend Google OAuth exchange warning:', e);
+              console.error('Backend Google OAuth exchange failed:', e);
             }
-
-            // Save session
-            localStorage.setItem(STORAGE_KEYS.TOKEN, jwtToken);
-            localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
-            setToken(jwtToken);
-            setUser(userData);
 
             // Clean up URL parameters and navigate to home
             window.history.replaceState(null, '', window.location.pathname);
