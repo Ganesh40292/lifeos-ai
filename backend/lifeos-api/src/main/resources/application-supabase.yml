@@ -1,12 +1,12 @@
 # ============================================
-# Supabase PostgreSQL Dedicated Profile
+# Supabase PostgreSQL Dedicated Profile (IPv4 Pooler Compatible)
 # ============================================
 
 spring:
   datasource:
-    url: jdbc:postgresql://db.bujlhczsiucvmjvwswnw.supabase.co:5432/postgres?sslmode=require
-    username: postgres
-    password: "#Ganesh808823"
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://aws-0-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres.bujlhczsiucvmjvwswnw}
+    password: ${SPRING_DATASOURCE_PASSWORD:#Ganesh808823}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5

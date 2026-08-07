@@ -24,7 +24,6 @@
 *.jks
 *.secret
 secrets/
-application-supabase.yml
 application-local.yml
 
 # OS files
