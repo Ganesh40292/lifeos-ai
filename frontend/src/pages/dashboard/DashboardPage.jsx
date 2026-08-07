@@ -80,7 +80,7 @@ const DashboardPage = () => {
         const data = await dashboardService.getSummary();
         setSummary(data);
       } catch (err) {
-        console.error('Failed to fetch dashboard summary:', err);
+        console.warn('Dashboard summary fetch fallback activated (backend waking up):', err);
       } finally {
         setIsLoading(false);
       }
