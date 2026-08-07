@@ -226,9 +226,10 @@ const RegisterPage = () => {
               type="button"
               onClick={() => {
                 setLoading(true);
-                setTimeout(() => {
-                  window.location.href = '/';
-                }, 800);
+                const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '870947341702-0n311b7s6rr9pvbrreqof10ftik0f7pb.apps.googleusercontent.com';
+                const redirectUri = encodeURIComponent(window.location.origin);
+                const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=openid%20email%20profile`;
+                window.location.href = googleAuthUrl;
               }}
               className="w-full py-2.5 px-4 rounded-xl border border-border bg-bg-elevated/60 hover:bg-bg-elevated text-text text-xs font-bold transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer shadow-sm hover:border-primary/40 hover:shadow-md"
             >
