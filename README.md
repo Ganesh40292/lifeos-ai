@@ -6,54 +6,64 @@ Aetheria combines academic task management, multi-currency financial budgeting, 
 
 ---
 
-## 🌟 Key Features & Latest Upgrades
+## 📥 Quick Clone
 
-### 🎨 1. Premium WebGL & Glassmorphism Aesthetics
-- **SoftAurora WebGL Background**: Procedural GLSL shader animation powering full-screen ambient lighting across authentication and workspace views.
-- **Border Beam Panel**: Twin comets orbiting a 2px conic gradient ring driven by delta-time spring physics (`BorderBeamPanel.jsx`).
-- **Google Single Sign-On (OAuth)**: 1-click **Continue with Google** single sign-on experience on both Login and Register pages.
+```bash
+git clone https://github.com/Ganesh40292/lifeos-ai.git
+cd lifeos-ai
+```
+
+---
+
+## 🌟 Key Features
+
+### 🎨 1. WebGL & Glassmorphism UI
+- **SoftAurora WebGL Background**: Ambient GLSL shader lighting across login, register, and workspace views.
+- **Border Beam Panel**: Animated conic gradient ring with spring physics surrounding authentication cards (`BorderBeamPanel.jsx`).
+- **Google Single Sign-On (OAuth)**: 1-click **Continue with Google** single sign-on experience on Login and Register pages.
 
 ### 🤖 2. Aetheria AI Workspace Copilot (`Ctrl + Shift + A` / `✨`)
-- **Smart Workspace Assistant** (`AiCopilot.jsx`):
+- **Interactive AI Assistant** (`AiCopilot.jsx`):
   - Summarizes study notes into key takeaway bullets.
   - Automatically generates 3D flashcards for exam review.
   - Audits monthly financial transactions and recommends savings strategies.
   - Generates 2-hour time-blocked Pomodoro focus schedules.
 
 ### 🛟 3. Help & Support Center (`/help`)
-- **Direct Admin Channel**: Quick contact link to `ganeshprasad40292.dev@gmail.com` with 1-click email copy.
+- **Direct Admin Channel**: Direct contact link to `ganeshprasad40292.dev@gmail.com` with 1-click address copy.
 - **Interactive Support Ticket Form**: Dispatch bug reports, feature requests, or account inquiries straight to the administrator.
-- **Searchable FAQ Accordions**: Instant live-filtered knowledge base covering security, focus rooms, data exports, and shortcuts.
+- **Searchable FAQ Accordions**: Live-filtered knowledge base covering security, focus rooms, data exports, and shortcuts.
 - **Fixed Dark Concrete Texture**: Multi-layer slate base (`#020617`), 14% opacity SVG noise texture, and top-right indigo radial glow.
 
-### 🎵 4. Web Audio Micro-Interaction SFX Engine
-- **Zero-Dependency Sound Effects** (`soundService.js`): Synthesizes crisp audio feedback for UI clicks, toggle switches, reward chimes, and notifications using browser Web Audio API oscillator nodes.
+### 🎵 4. Web Audio SFX Engine
+- **Zero-Dependency Sound Effects** (`soundService.js`): Crisp audio feedback for UI clicks, toggle switches, reward chimes, and notifications synthesized using native Web Audio API oscillators.
 - **Topbar Sound Toggle**: Global Mute/Unmute audio toggle with persistent user preference (`🔊` / `🔇`).
 
 ### 📱 5. Native PWA Mobile/Desktop App & Offline Banner
-- **PWA Install Prompt** (`PwaBanner.jsx`): Invites users to install Aetheria as a native desktop or mobile home screen application.
-- **Offline Network Alert**: Displays a subtle status alert when internet connectivity drops.
+- **PWA Install Prompt** (`PwaBanner.jsx`): Prompts users to install Aetheria as a native desktop or mobile home screen application.
+- **Offline Network Alert**: Displays a status banner when internet connectivity drops.
 
-### 🔔 6. Interactive Notification Center Drawer
-- **Slide-out Notification Drawer** (`NotificationCenter.jsx`): Displays real-time assignment deadline alerts (< 24h), budget category threshold warnings (> 80%), and daily workout reminders.
+### 🔔 6. Interactive Notification Center
+- **Slide-out Notification Drawer** (`NotificationCenter.jsx`): Real-time assignment deadline alerts (< 24h), budget category threshold warnings (> 80%), and daily workout reminders.
 
 ### 🌐 7. Multi-Language (i18n) Support
 - **Global Language Selector**: Toggle workspace languages seamlessly (**English 🇺🇸, Spanish 🇪🇸, Français 🇫🇷, Deutsch 🇩🇪, 日本語 🇯🇵, हिंदी 🇮🇳**).
 
-### ⚙️ 8. Elevated Next-Level Settings UI (`/settings`)
-- **Profile Hero Summary**: Displays user initials avatar, level status, account security verification badge, and email.
+### ⚙️ 8. Elevated Settings UI (`/settings`)
+- **Profile Hero Summary**: Displays user avatar, level status, account verification badge, and email.
 - **Live Theme Selector**: 6 curated themes (*Midnight, Aurora, Graphite OLED, Ocean Depth, Emerald Forest, Light Modern*) with real UI color swatch pills.
-- **Global Hotkey Filters**: Searchable keyboard shortcuts matrix with category pills (`Navigation`, `Actions`, `Global`).
-- **Data & Storage Allocation Bar**: Visual breakdown meter for study notes, finance logs, health data, and 1-click JSON backup export.
+- **Global Hotkey Matrix**: Searchable keyboard shortcuts table with category pills (`Navigation`, `Actions`, `Global`).
+- **Storage Allocation & JSON Backup**: Visual breakdown meter for study notes, finance logs, health data, and 1-click JSON backup exporter.
 
 ### 🐘 9. Cloud PostgreSQL & Supabase Integration
 - **PostgreSQL Native Support**: Complete database schema (`schema.sql`) configured with `UUID` primary keys, `TIMESTAMP WITHOUT TIME ZONE`, `DECIMAL(15,2)`, and cascading foreign keys.
-- **Supabase Cloud Ready**: Dedicated application profile (`application-supabase.yml`) optimized for Supabase transaction poolers and Render cloud hosting.
+- **Supabase Cloud Ready**: Pre-configured application profile (`application-supabase.yml`) optimized for Supabase transaction poolers and Render cloud hosting.
 
 ---
 
 ## 📁 Repository Structure
-```
+
+```text
 LifeOS/
 ├── backend/
 │   └── lifeos-api/
@@ -77,9 +87,15 @@ LifeOS/
 
 ---
 
-## 💻 Local Quickstart
+## 💻 Local Quickstart Guide
 
-### 1. Run the Frontend Client
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/Ganesh40292/lifeos-ai.git
+cd lifeos-ai
+```
+
+### Step 2: Launch Frontend Client
 ```bash
 cd frontend
 npm install
@@ -87,22 +103,27 @@ npm run dev
 ```
 Access the application at `http://localhost:5173/`.
 
-### 2. Run the Backend API (Local Profile)
+### Step 3: Launch Backend API (Local Profile)
+Open a separate terminal window:
 ```bash
 cd backend/lifeos-api
 ./mvnw spring-boot:run "-Dspring-boot.run.profiles=local"
 ```
-The local profile runs in-memory with PostgreSQL dialect compatibility.
+The local profile runs in-memory with PostgreSQL dialect compatibility on `http://localhost:8080`.
 
 ---
 
-## ☁️ Production Deployment Architecture
+## ☁️ Production Cloud Deployment Guide
 
-- **Frontend**: Deployed on **Vercel** (`frontend/`)
-- **Backend API**: Deployed on **Render** (`backend/lifeos-api/` with `Dockerfile`)
-- **Database**: Hosted on **Supabase** (PostgreSQL)
+This project is configured for single-click deployment using **Vercel + Render + Supabase**:
 
-### Launching Backend with Supabase
+| Layer | Service | Configuration |
+|---|---|---|
+| **Frontend** | **Vercel** | Root directory: `frontend`, Framework: `Vite`, Env: `VITE_API_URL` |
+| **Backend** | **Render** | Root directory: `backend/lifeos-api`, Environment: `Docker`, Profile: `supabase` |
+| **Database** | **Supabase** | PostgreSQL Database with transaction pooler connection |
+
+### Launch Backend Connected to Supabase
 ```bash
 ./mvnw spring-boot:run "-Dspring-boot.run.profiles=supabase"
 ```
