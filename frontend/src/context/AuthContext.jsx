@@ -21,9 +21,47 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem(STORAGE_KEYS.TOKEN));
   const [loading, setLoading] = useState(true);
 
-  // On mount, verify the stored token by fetching the current user
+  // On mount, handle Google OAuth callback OR verify stored token
   useEffect(() => {
-    const verifyToken = async () => {
+    const handleAuthCheck = async () => {
+      // 1. Check if returning from Google OAuth redirect (hash or query token)
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const searchParams = new URLSearchParams(window.location.search);
+      const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+
+      if (accessToken) {
+        try {
+          // Fetch Google User Profile using OAuth access token
+          const res = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
+          if (res.ok) {
+            const googleUser = await res.json();
+            const userData = {
+              id: googleUser.sub,
+              fullName: googleUser.name || 'Google User',
+              email: googleUser.email,
+              avatar: googleUser.picture,
+              xp: 250,
+              level: 2,
+              streakDays: 3
+            };
+
+            // Save session
+            localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
+            localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+            setToken(accessToken);
+            setUser(userData);
+
+            // Clean up URL parameters and navigate to home
+            window.history.replaceState(null, '', window.location.pathname);
+            setLoading(false);
+            return;
+          }
+        } catch (err) {
+          console.warn('Google OAuth token validation failed, falling back to local auth:', err);
+        }
+      }
+
+      // 2. Fallback to verifying existing stored token
       if (!token) {
         setLoading(false);
         return;
@@ -43,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    verifyToken();
+    handleAuthCheck();
   }, [token]);
 
   const login = useCallback(async (email, password) => {
