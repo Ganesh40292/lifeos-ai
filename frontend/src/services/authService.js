@@ -25,6 +25,16 @@ const authService = {
   },
 
   /**
+   * Log in or register via Google OAuth.
+   */
+  googleLogin: async ({ email, fullName, avatar }) => {
+    const response = await api.post('/auth/google', null, {
+      params: { email, fullName, avatar },
+    });
+    return response.data;
+  },
+
+  /**
    * Get the currently authenticated user's profile.
    * @returns {Promise<object>}
    */

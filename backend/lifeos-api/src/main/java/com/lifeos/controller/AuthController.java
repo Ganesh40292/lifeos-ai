@@ -50,6 +50,18 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> googleLogin(
+            @RequestParam String email,
+            @RequestParam(required = false) String fullName,
+            @RequestParam(required = false) String avatar,
+            HttpServletRequest httpServletRequest) {
+        String ipAddress = getClientIp(httpServletRequest);
+        String device = httpServletRequest.getHeader("User-Agent");
+        AuthResponse response = authService.loginOrRegisterGoogle(email, fullName, avatar, ipAddress, device);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser(Authentication authentication) {
         UserResponse userResponse = userService.getUserByEmail(authentication.getName());

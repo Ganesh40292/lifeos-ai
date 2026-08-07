@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
           const res = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
           if (res.ok) {
             const googleUser = await res.json();
-            const userData = {
+            let jwtToken = accessToken;
+            let userData = {
               id: googleUser.sub,
               fullName: googleUser.name || 'Google User',
               email: googleUser.email,
@@ -45,10 +46,24 @@ export const AuthProvider = ({ children }) => {
               streakDays: 3
             };
 
+            try {
+              const backendAuth = await authService.googleLogin({
+                email: googleUser.email,
+                fullName: googleUser.name,
+                avatar: googleUser.picture
+              });
+              if (backendAuth?.token) {
+                jwtToken = backendAuth.token;
+                userData = backendAuth.user || userData;
+              }
+            } catch (e) {
+              console.warn('Backend Google OAuth exchange warning:', e);
+            }
+
             // Save session
-            localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
+            localStorage.setItem(STORAGE_KEYS.TOKEN, jwtToken);
             localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
-            setToken(accessToken);
+            setToken(jwtToken);
             setUser(userData);
 
             // Clean up URL parameters and navigate to home

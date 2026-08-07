@@ -111,6 +111,35 @@ public class AuthService {
     }
 
     @Transactional
+    public AuthResponse loginOrRegisterGoogle(String email, String fullName, String avatar, String ipAddress, String device) {
+        String cleanEmail = email.toLowerCase().trim();
+        User user = userRepository.findByEmail(cleanEmail)
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .fullName(fullName != null && !fullName.isEmpty() ? fullName : "Google User")
+                            .email(cleanEmail)
+                            .password(passwordEncoder.encode(java.util.UUID.randomUUID().toString()))
+                            .avatar(avatar)
+                            .build();
+                    return userRepository.save(newUser);
+                });
+
+        if (avatar != null && !avatar.isEmpty() && (user.getAvatar() == null || user.getAvatar().isEmpty())) {
+            user.setAvatar(avatar);
+            user = userRepository.save(user);
+        }
+
+        String token = jwtTokenProvider.generateTokenFromEmail(user.getEmail());
+        saveSession(user, token, device, ipAddress);
+
+        return AuthResponse.builder()
+                .token(token)
+                .tokenType("Bearer")
+                .user(userService.mapToResponse(user))
+                .build();
+    }
+
+    @Transactional
     public AuthResponse verify2FaLogin(String tempToken, int code, String ipAddress, String device) {
         if (!jwtTokenProvider.validateToken(tempToken)) {
             throw new RuntimeException("Invalid or expired login session");
