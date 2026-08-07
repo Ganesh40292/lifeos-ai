@@ -227,7 +227,7 @@ const RegisterPage = () => {
               onClick={() => {
                 setLoading(true);
                 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '870947341702-0n311b7s6rr9pvbrreqof10ftik0f7pb.apps.googleusercontent.com';
-                const redirectUri = encodeURIComponent(window.location.origin);
+                const redirectUri = encodeURIComponent(window.location.origin.replace(/\/+$/, ''));
                 const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=openid%20email%20profile`;
                 window.location.href = googleAuthUrl;
               }}
