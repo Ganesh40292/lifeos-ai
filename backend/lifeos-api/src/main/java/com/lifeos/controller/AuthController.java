@@ -64,6 +64,9 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         UserResponse userResponse = userService.getUserByEmail(authentication.getName());
         return ResponseEntity.ok(ApiResponse.success(userResponse));
     }
@@ -83,17 +86,26 @@ public class AuthController {
 
     @GetMapping("/2fa/setup")
     public ResponseEntity<TwoFactorSetupResponse> setup2Fa(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok(authService.setup2Fa(authentication.getName()));
     }
 
     @PostMapping("/2fa/enable")
     public ResponseEntity<Void> enable2Fa(Authentication authentication, @RequestParam int code) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         authService.enable2Fa(authentication.getName(), code);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/2fa/disable")
     public ResponseEntity<Void> disable2Fa(Authentication authentication, @RequestParam int code) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         authService.disable2Fa(authentication.getName(), code);
         return ResponseEntity.ok().build();
     }
@@ -104,6 +116,9 @@ public class AuthController {
     public ResponseEntity<List<UserSessionResponse>> getActiveSessions(
             Authentication authentication,
             HttpServletRequest httpServletRequest) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String currentToken = extractToken(httpServletRequest);
         return ResponseEntity.ok(authService.getActiveSessions(authentication.getName(), currentToken));
     }
