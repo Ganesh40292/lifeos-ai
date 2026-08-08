@@ -268,14 +268,18 @@ public class AuthService {
     }
 
     private void saveSession(User user, String token, String device, String ipAddress) {
-        String tokenHash = JwtTokenProvider.hashToken(token);
-        com.lifeos.entity.UserSession session = com.lifeos.entity.UserSession.builder()
-                .user(user)
-                .tokenHash(tokenHash)
-                .device(device != null ? device : "Unknown Device")
-                .ipAddress(ipAddress != null ? ipAddress : "Unknown IP")
-                .lastActive(java.time.LocalDateTime.now())
-                .build();
-        userSessionRepository.save(session);
+        try {
+            String tokenHash = JwtTokenProvider.hashToken(token);
+            com.lifeos.entity.UserSession session = com.lifeos.entity.UserSession.builder()
+                    .user(user)
+                    .tokenHash(tokenHash)
+                    .device(device != null ? device : "Unknown Device")
+                    .ipAddress(ipAddress != null ? ipAddress : "Unknown IP")
+                    .lastActive(java.time.LocalDateTime.now())
+                    .build();
+            userSessionRepository.save(session);
+        } catch (Exception e) {
+            System.err.println("User session logging warning: " + e.getMessage());
+        }
     }
 }

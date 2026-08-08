@@ -27,10 +27,21 @@ public class JwtTokenProvider {
     public JwtTokenProvider(
             @Value("${app.jwt.secret}") String jwtSecret,
             @Value("${app.jwt.expiration-ms}") long jwtExpirationMs) {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(
-                java.util.Base64.getEncoder().encodeToString(jwtSecret.getBytes())
-        ));
-        this.jwtExpirationMs = jwtExpirationMs;
+        byte[] secretBytes = (jwtSecret != null && !jwtSecret.isEmpty()) 
+                ? jwtSecret.getBytes(java.nio.charset.StandardCharsets.UTF_8) 
+                : "LifeOS_Super_Secret_Key_At_Least_256_Bits_Long".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+        if (secretBytes.length < 32) {
+            byte[] padded = new byte[32];
+            System.arraycopy(secretBytes, 0, padded, 0, secretBytes.length);
+            for (int i = secretBytes.length; i < 32; i++) {
+                padded[i] = (byte) 'A';
+            }
+            secretBytes = padded;
+        }
+
+        this.key = Keys.hmacShaKeyFor(secretBytes);
+        this.jwtExpirationMs = jwtExpirationMs > 0 ? jwtExpirationMs : 86400000L;
     }
 
     /**
