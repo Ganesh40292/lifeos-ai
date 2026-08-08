@@ -1,5 +1,6 @@
 # ============================================
-# Supabase PostgreSQL Dedicated Profile (Session Pooler IPv4)
+# Supabase PostgreSQL Dedicated Profile (Production Mode)
+# Requires SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, and SPRING_DATASOURCE_PASSWORD
 # ============================================
 
 spring:
@@ -25,3 +26,9 @@ spring:
   docker:
     compose:
       enabled: false
+
+server:
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never

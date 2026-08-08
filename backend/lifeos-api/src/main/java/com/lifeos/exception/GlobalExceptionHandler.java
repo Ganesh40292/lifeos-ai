@@ -1,6 +1,8 @@
 package com.lifeos.exception;
 
 import com.lifeos.dto.response.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,10 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global exception handler that converts exceptions into consistent API responses.
+ * Global exception handler that converts exceptions into consistent, production-safe API responses.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
@@ -63,11 +67,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
-        String msg = (ex.getMessage() != null && !ex.getMessage().isEmpty()) 
-                ? ex.getMessage() 
-                : "An unexpected error occurred. Please try again later.";
+        log.error("Unhandled internal server exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(msg));
+                .body(ApiResponse.error("An unexpected server error occurred. Please try again later."));
     }
 }

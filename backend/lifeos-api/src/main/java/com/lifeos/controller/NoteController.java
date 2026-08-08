@@ -9,6 +9,8 @@ import com.lifeos.service.NoteService;
 import com.lifeos.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,12 +25,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * REST controller for Note Module endpoints.
+ * REST controller for Note Module endpoints with strict ownership verification and production-safe error responses.
  */
 @RestController
 @RequestMapping("/api/notes")
 @RequiredArgsConstructor
 public class NoteController {
+
+    private static final Logger log = LoggerFactory.getLogger(NoteController.class);
 
     private final NoteService noteService;
     private final UserService userService;
@@ -120,8 +124,9 @@ public class NoteController {
             return ResponseEntity.ok(ApiResponse.success("PDF uploaded successfully", updatedNote));
             
         } catch (IOException ex) {
+            log.error("PDF upload failure for user {} note {}: {}", userId, id, ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Could not upload PDF: " + ex.getMessage()));
+                    .body(ApiResponse.error("Could not upload PDF. Please try again later."));
         }
     }
 
@@ -150,6 +155,23 @@ public class NoteController {
             return ResponseEntity.badRequest().build();
         }
         
+        UUID userId = getUserId(authentication);
+        List<NoteResponse> userNotes = noteService.getNotes(userId);
+
+        // Strict Ownership Check: Verify requested file belongs to a Note owned by the authenticated user
+        boolean ownsFile = userNotes.stream().anyMatch(note -> 
+            note.getFilePath() != null && (
+                note.getFilePath().endsWith(fileName) ||
+                note.getFilePath().equals("supabase:" + fileName) ||
+                note.getFilePath().equals("uploads/notes/" + fileName)
+            )
+        );
+
+        if (!ownsFile) {
+            log.warn("Security Alert: User {} attempted unauthorized access to PDF file {}", userId, fileName);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
         try {
             Resource resource = fileStorageService.loadFileAsResource(fileName);
             
@@ -158,6 +180,7 @@ public class NoteController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
         } catch (IOException ex) {
+            log.error("Failed to load PDF file {}: {}", fileName, ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
