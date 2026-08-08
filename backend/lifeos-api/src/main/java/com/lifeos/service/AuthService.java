@@ -113,19 +113,21 @@ public class AuthService {
     @Transactional
     public AuthResponse loginOrRegisterGoogle(String email, String fullName, String avatar, String ipAddress, String device) {
         String cleanEmail = email.toLowerCase().trim();
+        String safeAvatar = (avatar != null && avatar.length() > 490) ? avatar.substring(0, 490) : avatar;
+
         User user = userRepository.findByEmail(cleanEmail)
                 .orElseGet(() -> {
                     User newUser = User.builder()
                             .fullName(fullName != null && !fullName.isEmpty() ? fullName : "Google User")
                             .email(cleanEmail)
                             .password(passwordEncoder.encode(java.util.UUID.randomUUID().toString()))
-                            .avatar(avatar)
+                            .avatar(safeAvatar)
                             .build();
                     return userRepository.save(newUser);
                 });
 
-        if (avatar != null && !avatar.isEmpty() && (user.getAvatar() == null || user.getAvatar().isEmpty())) {
-            user.setAvatar(avatar);
+        if (safeAvatar != null && !safeAvatar.isEmpty() && (user.getAvatar() == null || user.getAvatar().isEmpty())) {
+            user.setAvatar(safeAvatar);
             user = userRepository.save(user);
         }
 
