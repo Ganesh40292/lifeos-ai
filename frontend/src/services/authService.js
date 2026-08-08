@@ -28,9 +28,7 @@ const authService = {
    * Log in or register via Google OAuth.
    */
   googleLogin: async ({ email, fullName, avatar }) => {
-    const response = await api.post('/auth/google', null, {
-      params: { email, fullName, avatar },
-    });
+    const response = await api.post('/auth/google', { email, fullName, avatar });
     return response.data;
   },
 

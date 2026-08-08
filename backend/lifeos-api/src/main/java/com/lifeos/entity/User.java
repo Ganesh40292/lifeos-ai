@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String avatar;
 
     @Column(name = "created_at", nullable = false, updatable = false)

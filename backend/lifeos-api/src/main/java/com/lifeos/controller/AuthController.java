@@ -52,13 +52,22 @@ public class AuthController {
 
     @PostMapping("/google")
     public ResponseEntity<AuthResponse> googleLogin(
-            @RequestParam String email,
+            @RequestBody(required = false) com.lifeos.dto.request.GoogleLoginRequest bodyRequest,
+            @RequestParam(required = false) String email,
             @RequestParam(required = false) String fullName,
             @RequestParam(required = false) String avatar,
             HttpServletRequest httpServletRequest) {
+        String userEmail = bodyRequest != null && bodyRequest.getEmail() != null ? bodyRequest.getEmail() : email;
+        String userFullName = bodyRequest != null && bodyRequest.getFullName() != null ? bodyRequest.getFullName() : fullName;
+        String userAvatar = bodyRequest != null && bodyRequest.getAvatar() != null ? bodyRequest.getAvatar() : avatar;
+
+        if (userEmail == null || userEmail.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         String ipAddress = getClientIp(httpServletRequest);
         String device = httpServletRequest.getHeader("User-Agent");
-        AuthResponse response = authService.loginOrRegisterGoogle(email, fullName, avatar, ipAddress, device);
+        AuthResponse response = authService.loginOrRegisterGoogle(userEmail, userFullName, userAvatar, ipAddress, device);
         return ResponseEntity.ok(response);
     }
 
