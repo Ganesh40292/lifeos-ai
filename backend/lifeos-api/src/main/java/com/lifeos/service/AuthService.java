@@ -59,6 +59,11 @@ public class AuthService {
                 .fullName(request.getFullName())
                 .email(request.getEmail().toLowerCase().trim())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .createdAt(java.time.LocalDateTime.now())
+                .updatedAt(java.time.LocalDateTime.now())
+                .level(1)
+                .xp(0)
+                .streakDays(0)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -122,6 +127,11 @@ public class AuthService {
                             .email(cleanEmail)
                             .password(passwordEncoder.encode(java.util.UUID.randomUUID().toString()))
                             .avatar(safeAvatar)
+                            .createdAt(java.time.LocalDateTime.now())
+                            .updatedAt(java.time.LocalDateTime.now())
+                            .level(1)
+                            .xp(0)
+                            .streakDays(0)
                             .build();
                     return userRepository.save(newUser);
                 });
