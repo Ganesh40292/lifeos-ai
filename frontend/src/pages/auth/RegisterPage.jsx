@@ -65,11 +65,15 @@ const RegisterPage = () => {
       await register(formData.fullName, formData.email, formData.password);
       localStorage.setItem('aetheria_show_onboarding', 'true');
     } catch (err) {
-      const message =
-        err.response?.data?.message ||
-        (err.message === 'Network Error'
-          ? 'Cannot connect to server. Please check backend API status.'
-          : 'Registration failed. Please try again.');
+      let message = 'Registration failed. Please try again.';
+      if (err.response?.data?.errors && typeof err.response.data.errors === 'object') {
+        const firstErr = Object.values(err.response.data.errors)[0];
+        if (firstErr) message = firstErr;
+      } else if (err.response?.data?.message) {
+        message = err.response.data.message;
+      } else if (err.message === 'Network Error' || err.code === 'ECONNABORTED') {
+        message = 'Backend server is starting up. Please wait 5 seconds and try again.';
+      }
       setApiError(message);
     } finally {
       setLoading(false);

@@ -62,11 +62,12 @@ const LoginPage = () => {
         setTempToken(res.tempSessionToken);
       }
     } catch (err) {
-      const message =
-        err.response?.data?.message ||
-        (err.message === 'Network Error'
-          ? 'Cannot connect to server. Please ensure the backend is running.'
-          : 'Invalid credentials. Please try again.');
+      let message = 'Invalid credentials. Please try again.';
+      if (err.response?.data?.message) {
+        message = err.response.data.message;
+      } else if (err.message === 'Network Error' || err.code === 'ECONNABORTED') {
+        message = 'Backend server is starting up. Please wait 5 seconds and try again.';
+      }
       setApiError(message);
     } finally {
       setLoading(false);
