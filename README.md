@@ -113,17 +113,27 @@ The local profile runs in-memory with PostgreSQL dialect compatibility on `http:
 
 ---
 
-## ☁️ Production Cloud Deployment Guide
+---
+
+## ☁️ Cloud Deployment Setup Guide
+
+> ℹ️ **Note**: All previous live cloud instances (Vercel, Render, Supabase) have been torn down/reset by the project maintainer. Follow the guide below to deploy your own fresh instances.
 
 This project is configured for single-click deployment using **Vercel + Render + Supabase**:
 
 | Layer | Service | Configuration |
 |---|---|---|
 | **Frontend** | **Vercel** | Root directory: `frontend`, Framework: `Vite`, Env: `VITE_API_URL` |
-| **Backend** | **Render** | Root directory: `backend/lifeos-api`, Environment: `Docker`, Profile: `supabase` |
-| **Database** | **Supabase** | PostgreSQL Database with transaction pooler connection |
+| **Backend** | **Render** | Root directory: `backend/lifeos-api`, Build: `./mvnw clean package -DskipTests`, Env: `SPRING_PROFILES_ACTIVE=supabase` |
+| **Database & Storage** | **Supabase** | PostgreSQL Database (`schema.sql`) & Storage Bucket (`notes`) |
 
-### Launch Backend Connected to Supabase
+### Deployment Steps:
+
+1. **Database (Supabase)**: Create a new PostgreSQL project on Supabase and run `schema.sql`. Create a storage bucket named `notes`.
+2. **Backend (Render)**: Create a Java Web Service on Render pointing to `backend/lifeos-api`. Set environment variables for `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`, `JWT_SECRET`, `SUPABASE_URL`, and `SUPABASE_KEY`.
+3. **Frontend (Vercel)**: Import the repository into Vercel setting Root Directory to `frontend`. Add environment variable `VITE_API_URL` pointing to your Render backend URL.
+
+### Launch Backend Locally Connected to Supabase
 ```bash
 ./mvnw spring-boot:run "-Dspring-boot.run.profiles=supabase"
 ```
