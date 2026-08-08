@@ -1,11 +1,13 @@
 /** Aetheria application constants. */
 export const APP_NAME = 'Aetheria';
 
-/** API base URL — dynamic for production deployments with automatic /api suffix formatting */
-const rawApiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
-export const API_BASE_URL = (rawApiUrl.startsWith('http') && !rawApiUrl.endsWith('/api')) 
-  ? `${rawApiUrl.replace(/\/+$/, '')}/api` 
-  : rawApiUrl;
+/** API and WebSocket base URLs — dynamic for production deployments */
+const rawUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:8080');
+const cleanHost = rawUrl.replace(/\/+$/, '').replace(/\/api$/, '');
+
+export const SERVER_BASE_URL = cleanHost;
+export const API_BASE_URL = `${cleanHost}/api`;
+export const WS_BASE_URL = `${cleanHost}/ws`;
 
 /** LocalStorage keys */
 export const STORAGE_KEYS = {

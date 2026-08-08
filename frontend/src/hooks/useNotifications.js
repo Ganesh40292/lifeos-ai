@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useAuth } from '@/hooks/useAuth';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import api from '@/services/api';
+import { WS_BASE_URL } from '@/utils/constants';
 
 /**
  * Hook to manage real-time WebSocket notifications + REST fallback.
@@ -20,13 +20,11 @@ const useNotifications = () => {
   const fetchNotifications = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${API_BASE}/api/notifications`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        setNotifications(data.data || []);
-        const unread = (data.data || []).filter(n => !n.read).length;
+      const res = await api.get('/notifications');
+      if (res.data?.success) {
+        const list = res.data.data || [];
+        setNotifications(list);
+        const unread = list.filter(n => !n.read && !n.isRead).length;
         setUnreadCount(unread);
       }
     } catch (err) {
@@ -38,11 +36,8 @@ const useNotifications = () => {
   const markAllRead = useCallback(async () => {
     if (!token) return;
     try {
-      await fetch(`${API_BASE}/api/notifications/mark-all-read`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      await api.post('/notifications/mark-all-read');
+      setNotifications(prev => prev.map(n => ({ ...n, read: true, isRead: true })));
       setUnreadCount(0);
     } catch (err) {
       console.error('Failed to mark notifications as read:', err);
@@ -56,7 +51,7 @@ const useNotifications = () => {
     fetchNotifications();
 
     const client = new Client({
-      webSocketFactory: () => new SockJS(`${API_BASE}/ws`),
+      webSocketFactory: () => new SockJS(WS_BASE_URL),
       connectHeaders: {
         Authorization: `Bearer ${token}`
       },

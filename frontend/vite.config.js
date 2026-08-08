@@ -39,19 +39,11 @@ export default defineConfig({
       workbox: {
         // Cache static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // Network first for API calls, cache first for assets
+        // NetworkOnly for private authenticated API calls
         runtimeCaching: [
           {
             urlPattern: /^https?:\/\/.*\/api\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'lifeos-api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60  // 1 hour
-              },
-              networkTimeoutSeconds: 10
-            }
+            handler: 'NetworkOnly',
           }
         ]
       },

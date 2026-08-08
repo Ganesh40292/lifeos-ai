@@ -20,19 +20,19 @@ public class CorsConfig {
 
         // Allowed origins — read from environment or support Vercel preview/production domains
         String frontendUrl = System.getenv("FRONTEND_URL");
-        if (frontendUrl != null && !frontendUrl.isEmpty()) {
+        if (frontendUrl != null && !frontendUrl.trim().isEmpty()) {
+            String cleanUrl = frontendUrl.trim().replaceAll("/+$", "");
             configuration.setAllowedOriginPatterns(List.of(
                     "http://localhost:5173",
                     "http://localhost:3000",
                     "https://*.vercel.app",
-                    frontendUrl
+                    cleanUrl
             ));
         } else {
             configuration.setAllowedOriginPatterns(List.of(
                     "http://localhost:5173",
                     "http://localhost:3000",
-                    "https://*.vercel.app",
-                    "*"
+                    "https://*.vercel.app"
             ));
         }
 

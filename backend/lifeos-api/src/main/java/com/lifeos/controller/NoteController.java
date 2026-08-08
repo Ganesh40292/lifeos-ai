@@ -4,25 +4,21 @@ import com.lifeos.dto.request.NoteRequest;
 import com.lifeos.dto.response.ApiResponse;
 import com.lifeos.dto.response.NoteResponse;
 import com.lifeos.dto.response.UserResponse;
+import com.lifeos.service.FileStorageService;
 import com.lifeos.service.NoteService;
 import com.lifeos.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +32,7 @@ public class NoteController {
 
     private final NoteService noteService;
     private final UserService userService;
+    private final FileStorageService fileStorageService;
 
     private UUID getUserId(Authentication authentication) {
         UserResponse user = userService.getUserByEmail(authentication.getName());
@@ -77,7 +74,12 @@ public class NoteController {
     public ResponseEntity<ApiResponse<Void>> deleteNote(
             Authentication authentication,
             @PathVariable UUID id) {
-        noteService.deleteNote(getUserId(authentication), id);
+        UUID userId = getUserId(authentication);
+        NoteResponse note = noteService.getNoteById(userId, id);
+        if (note.getFilePath() != null) {
+            fileStorageService.deleteFile(note.getFilePath());
+        }
+        noteService.deleteNote(userId, id);
         return ResponseEntity.ok(ApiResponse.success("Note deleted successfully", null));
     }
 
@@ -108,29 +110,12 @@ public class NoteController {
         }
         
         try {
-            Path uploadPath = Paths.get("uploads/notes/").toAbsolutePath().normalize();
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            
-            String originalFileName = file.getOriginalFilename();
-            String fileExtension = ".pdf";
-            String cleanName = originalFileName != null ? originalFileName.replaceAll("[^a-zA-Z0-9.-]", "_") : "document";
-            if (!cleanName.endsWith(fileExtension)) {
-                cleanName += fileExtension;
-            }
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + cleanName;
-            Path targetLocation = uploadPath.resolve(uniqueFileName);
-            
             if (note.getFilePath() != null) {
-                Path oldPath = Paths.get(note.getFilePath()).toAbsolutePath().normalize();
-                Files.deleteIfExists(oldPath);
+                fileStorageService.deleteFile(note.getFilePath());
             }
             
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            
-            String savedRelativePath = "uploads/notes/" + uniqueFileName;
-            NoteResponse updatedNote = noteService.updateNoteFilePath(userId, id, savedRelativePath);
+            String savedFilePath = fileStorageService.storeFile(file);
+            NoteResponse updatedNote = noteService.updateNoteFilePath(userId, id, savedFilePath);
             
             return ResponseEntity.ok(ApiResponse.success("PDF uploaded successfully", updatedNote));
             
@@ -149,12 +134,7 @@ public class NoteController {
         NoteResponse note = noteService.getNoteById(userId, id);
         
         if (note.getFilePath() != null) {
-            try {
-                Path filePath = Paths.get(note.getFilePath()).toAbsolutePath().normalize();
-                Files.deleteIfExists(filePath);
-            } catch (IOException ex) {
-                System.err.println("Could not delete physical PDF file: " + ex.getMessage());
-            }
+            fileStorageService.deleteFile(note.getFilePath());
         }
         
         NoteResponse updatedNote = noteService.updateNoteFilePath(userId, id, null);
@@ -171,19 +151,14 @@ public class NoteController {
         }
         
         try {
-            Path filePath = Paths.get("uploads/notes/").resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = fileStorageService.loadFileAsResource(fileName);
             
-            if (resource.exists() && resource.isReadable()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
         } catch (IOException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }
