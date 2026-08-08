@@ -16,8 +16,9 @@ import java.nio.file.*;
 import java.util.UUID;
 
 /**
- * Enterprise File Storage Service offering persistent Supabase Storage bucket uploads
- * with automatic local filesystem fallback for development environments.
+ * Production-grade Cloud File Storage Service.
+ * Enforces persistent Supabase Cloud Storage in production environments
+ * and forbids silent local disk fallbacks when running in production mode.
  */
 @Service
 public class FileStorageService {
@@ -27,15 +28,18 @@ public class FileStorageService {
     private final String supabaseUrl;
     private final String supabaseKey;
     private final String bucketName;
+    private final String activeProfile;
     private final RestTemplate restTemplate;
 
     public FileStorageService(
             @Value("${supabase.url:}") String supabaseUrl,
             @Value("${supabase.key:}") String supabaseKey,
-            @Value("${supabase.bucket:notes}") String bucketName) {
+            @Value("${supabase.bucket:notes}") String bucketName,
+            @Value("${spring.profiles.active:local}") String activeProfile) {
         this.supabaseUrl = supabaseUrl != null ? supabaseUrl.trim().replaceAll("/+$", "") : "";
         this.supabaseKey = supabaseKey != null ? supabaseKey.trim() : "";
         this.bucketName = bucketName != null && !bucketName.isEmpty() ? bucketName : "notes";
+        this.activeProfile = activeProfile != null ? activeProfile.trim().toLowerCase() : "local";
         this.restTemplate = new RestTemplate();
     }
 
@@ -43,8 +47,12 @@ public class FileStorageService {
         return !supabaseUrl.isEmpty() && !supabaseKey.isEmpty();
     }
 
+    public boolean isProductionEnvironment() {
+        return activeProfile.contains("supabase") || activeProfile.contains("prod");
+    }
+
     /**
-     * Store file persistently in Supabase Storage or local filesystem.
+     * Store file persistently in Supabase Storage or local filesystem (local dev only).
      * @return Path string or Supabase object reference
      */
     public String storeFile(MultipartFile file) throws IOException {
@@ -73,11 +81,19 @@ public class FileStorageService {
                     return "supabase:" + uniqueFileName;
                 }
             } catch (Exception e) {
-                log.error("Failed to upload to Supabase Storage, falling back to local storage: {}", e.getMessage());
+                log.error("Failed to upload file to Supabase Storage: {}", e.getMessage(), e);
+                if (isProductionEnvironment()) {
+                    throw new IOException("Production Storage Error: Upload to Supabase Cloud Storage failed: " + e.getMessage(), e);
+                }
             }
         }
 
-        // Local Filesystem Fallback
+        // Enforce cloud storage in production
+        if (isProductionEnvironment()) {
+            throw new IOException("Production Configuration Error: Supabase Storage parameters (SUPABASE_URL / SUPABASE_KEY) are missing or misconfigured. Local disk fallback is disabled in production.");
+        }
+
+        // Local Filesystem Fallback (Development profile only)
         Path uploadPath = Paths.get("uploads/notes/").toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -113,7 +129,7 @@ public class FileStorageService {
             }
         }
 
-        // Local Filesystem Delete
+        // Local Filesystem Delete (Dev mode)
         try {
             Path path = Paths.get(filePath.startsWith("uploads/") ? filePath : "uploads/notes/" + filePath).toAbsolutePath().normalize();
             Files.deleteIfExists(path);
@@ -146,11 +162,15 @@ public class FileStorageService {
                     };
                 }
             } catch (Exception e) {
-                log.warn("Could not load file from Supabase Storage, trying local filesystem: {}", e.getMessage());
+                log.warn("Could not load file from Supabase Storage: {}", e.getMessage());
             }
         }
 
-        // Local Filesystem Load
+        if (isProductionEnvironment() && !fileName.startsWith("uploads/")) {
+            throw new IOException("Production Storage Error: File not found in Supabase Cloud Storage: " + fileName);
+        }
+
+        // Local Filesystem Load (Dev mode)
         String cleanLocalName = fileName.startsWith("supabase:") ? fileName.substring(9) : fileName;
         Path filePath = Paths.get("uploads/notes/").resolve(cleanLocalName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
